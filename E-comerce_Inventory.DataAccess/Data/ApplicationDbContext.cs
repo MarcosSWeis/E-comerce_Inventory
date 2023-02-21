@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace E_comerce_Inventory.Web.Data
+namespace E_comerce_Inventory.DataAccess.Data
 {
     public class ApplicationDbContext :IdentityDbContext
     {

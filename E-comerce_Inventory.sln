@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "E-comerce_Inventory.Models"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E-comerce_Inventory.Web", "E-comerce_Inventory.Web\E-comerce_Inventory.Web.csproj", "{51E61510-AC67-498C-9EAA-665656D8FF8A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E-comerce_Inventory.DataAccess", "E-comerce_Inventory.DataAccess\E-comerce_Inventory.DataAccess.csproj", "{4EB95A04-8E25-444B-B405-8AB56B39142C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E-comerce_Inventory.Utilities", "E-comerce_Inventory.Utilities\E-comerce_Inventory.Utilities.csproj", "{3FA3BBC8-5970-4952-951B-B0B7AD4F2BC5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{51E61510-AC67-498C-9EAA-665656D8FF8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51E61510-AC67-498C-9EAA-665656D8FF8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51E61510-AC67-498C-9EAA-665656D8FF8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4EB95A04-8E25-444B-B405-8AB56B39142C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4EB95A04-8E25-444B-B405-8AB56B39142C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4EB95A04-8E25-444B-B405-8AB56B39142C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4EB95A04-8E25-444B-B405-8AB56B39142C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FA3BBC8-5970-4952-951B-B0B7AD4F2BC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FA3BBC8-5970-4952-951B-B0B7AD4F2BC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FA3BBC8-5970-4952-951B-B0B7AD4F2BC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FA3BBC8-5970-4952-951B-B0B7AD4F2BC5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
