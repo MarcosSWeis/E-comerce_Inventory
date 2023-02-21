@@ -7,8 +7,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace E_comerce_Inventory.Web.Controllers
+namespace E_comerce_Inventory.Web.Areas.Inventory.Controllers
 {
+    //Indico que Home controller partenece al area inventario
+    [Area("Inventory")]
     public class HomeController :Controller
     {
         private readonly ILogger<HomeController> _logger;
