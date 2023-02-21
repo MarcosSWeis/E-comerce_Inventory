@@ -17,6 +17,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\E-comerce_Inventory.DataAccess\E-comerce_Inventory.DataAccess.csproj" />
+    <ProjectReference Include="..\E-comerce_Inventory.Models\E-comerce_Inventory.Models.csproj" />
+    <ProjectReference Include="..\E-comerce_Inventory.Utilities\E-comerce_Inventory.Utilities.csproj" />
   </ItemGroup>
 
 </Project>

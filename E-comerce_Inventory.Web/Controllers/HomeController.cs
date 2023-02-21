@@ -1,4 +1,4 @@
-﻿using E_comerce_Inventory.Web.Models;
+﻿using E_comerce_Inventory.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;

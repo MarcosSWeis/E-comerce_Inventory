@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32811.315
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "E-comerce_Inventory.Models", "E-comerce_Inventory.Models\E-comerce_Inventory.Models.csproj", "{E75E317A-CF48-4082-8021-E6EEFD40E123}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "E-comerce_Inventory.Web", "E-comerce_Inventory.Web\E-comerce_Inventory.Web.csproj", "{51E61510-AC67-498C-9EAA-665656D8FF8A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E-comerce_Inventory.Web", "E-comerce_Inventory.Web\E-comerce_Inventory.Web.csproj", "{51E61510-AC67-498C-9EAA-665656D8FF8A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "E-comerce_Inventory.DataAccess", "E-comerce_Inventory.DataAccess\E-comerce_Inventory.DataAccess.csproj", "{4EB95A04-8E25-444B-B405-8AB56B39142C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E-comerce_Inventory.DataAccess", "E-comerce_Inventory.DataAccess\E-comerce_Inventory.DataAccess.csproj", "{4EB95A04-8E25-444B-B405-8AB56B39142C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E-comerce_Inventory.Models", "E-comerce_Inventory.Models\E-comerce_Inventory.Models.csproj", "{F9400761-A0E7-45D1-8232-FA6ACD1F26D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E-comerce_Inventory.Utilities", "E-comerce_Inventory.Utilities\E-comerce_Inventory.Utilities.csproj", "{3FA3BBC8-5970-4952-951B-B0B7AD4F2BC5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E-comerce_Inventory.Utilities", "E-comerce_Inventory.Utilities\E-comerce_Inventory.Utilities.csproj", "{19181F6D-0382-4F0A-81D2-91473756E102}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E75E317A-CF48-4082-8021-E6EEFD40E123}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E75E317A-CF48-4082-8021-E6EEFD40E123}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E75E317A-CF48-4082-8021-E6EEFD40E123}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E75E317A-CF48-4082-8021-E6EEFD40E123}.Release|Any CPU.Build.0 = Release|Any CPU
 		{51E61510-AC67-498C-9EAA-665656D8FF8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{51E61510-AC67-498C-9EAA-665656D8FF8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51E61510-AC67-498C-9EAA-665656D8FF8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -29,10 +25,14 @@ Global
 		{4EB95A04-8E25-444B-B405-8AB56B39142C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4EB95A04-8E25-444B-B405-8AB56B39142C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4EB95A04-8E25-444B-B405-8AB56B39142C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3FA3BBC8-5970-4952-951B-B0B7AD4F2BC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3FA3BBC8-5970-4952-951B-B0B7AD4F2BC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3FA3BBC8-5970-4952-951B-B0B7AD4F2BC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3FA3BBC8-5970-4952-951B-B0B7AD4F2BC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9400761-A0E7-45D1-8232-FA6ACD1F26D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9400761-A0E7-45D1-8232-FA6ACD1F26D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9400761-A0E7-45D1-8232-FA6ACD1F26D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9400761-A0E7-45D1-8232-FA6ACD1F26D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19181F6D-0382-4F0A-81D2-91473756E102}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19181F6D-0382-4F0A-81D2-91473756E102}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19181F6D-0382-4F0A-81D2-91473756E102}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19181F6D-0382-4F0A-81D2-91473756E102}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
