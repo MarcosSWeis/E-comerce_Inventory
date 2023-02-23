@@ -1,4 +1,6 @@
 using E_comerce_Inventory.DataAccess.Data;
+using E_comerce_Inventory.DataAccess.Repository;
+using E_comerce_Inventory.DataAccess.Repository.Interface;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -32,8 +34,8 @@ namespace E_comerce_Inventory.Web
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddDefaultIdentity<IdentityUser>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddScoped<IWorkUnit,WorkUnit>();
             //al controlador de de vistas razor , depeus de haber instalado el packete le añado .AddRazorRuntimeCompilation() , para poder modificar las vistas en tiempo de ejecucion
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
         }
