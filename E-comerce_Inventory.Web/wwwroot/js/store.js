@@ -35,12 +35,12 @@ function loadDataTable() {
                     render: function (data) {
                         return `
                                 <div class="text-center">
-                                    <a href="/Admin/Store/Upsert/${data}" class="btn btn-success text-white" style="cursor:pointer">
+                                    <a href="/Admin/Store/Upsert/${data}" class="btn btn-info text-white" style="cursor:pointer">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
-                                    <a href="" class="btn btn-danger text-white" style="cursor:pointer">
+                                    <a  onclick=Delete("/Admin/Store/Delete/${data}")  class="btn btn-danger text-white" style="cursor:pointer">
                                        <i class="bi bi-trash3"></i>
-                                    </a>
+                                    </a >
                                 </div>
                                `
                     },
@@ -49,5 +49,34 @@ function loadDataTable() {
             ]
         })
    
+}
+
+function Delete(url) { 
+    Swal.fire({
+        title: "Esta seguro de que desea eliminar esta tienda",
+        text: "Este registro no se podra recuperar",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true
+    }).then((delet) => {
+        if (delet)
+        {
+                $.ajax({
+                    type: "DELETE",
+                    url: url,
+                    //data es la respuesta que me da el mentodo al que llame
+                    success: function (data) {                        
+                        if (data.success) {
+                            //envio la notidicacion con el mensaje
+                            toastr.success(data.message);
+                            //recargo la datatable
+                            dataTable.ajax.reload();
+                        } else {
+                            toastr.error(data.message);
+                        }
+                    }
+                });     
+        }
+    });
 }
 

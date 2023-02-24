@@ -1,6 +1,7 @@
 ﻿using E_comerce_Inventory.DataAccess.Repository.Interface;
 using E_comerce_Inventory.Models.DataModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 
 namespace E_comerce_Inventory.Web.Areas.Admin.Controllers
 {
@@ -74,6 +75,23 @@ namespace E_comerce_Inventory.Web.Areas.Admin.Controllers
             //return all stores in Json format
             return Json(new { data = all });
         }
+
+
+        [HttpDelete]
+        public IActionResult Delete(int id)
+        {
+            var store = _workUnit.Store.GetById(id);
+            if (store == null)
+            {
+                //no se encontro la store
+                return Json(new { success = false,message = "Error al borrar tienda" });
+            }
+            _workUnit.Store.Delete(store);
+            _workUnit.SaveChangesInDb();
+
+            return Json(new { success = true,message = "Tienda borrada exitosamente" });
+        }
+
         #endregion
     }
 }
