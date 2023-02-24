@@ -39,6 +39,32 @@ namespace E_comerce_Inventory.Web.Areas.Admin.Controllers
             return View(store);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        //recibo una store del submit del formualri oque viaja por post a este metodo, de la vista Upsert.cshtml
+        public IActionResult Upsert(Store store)
+        {
+            //pregunto si el modelo es valido , es decir si no hubo errores en nuestra pagina
+            if (ModelState.IsValid)
+            {
+                //creando store
+                if (store.Id == 0)
+                {
+                    _workUnit.Store.Add(store);
+                } else
+                {
+                    //actualizar store
+                    _workUnit.Store.Update(store);
+                }
+                _workUnit.SaveChangesInDb();
+                //reutn View index
+                return RedirectToAction(nameof(Index));
+            }
+            //return UPSERT view with the model like this
+            return View(store);
+
+        }
+
         #region API
         [HttpGet]
         public IActionResult GetAll()

@@ -35,7 +35,7 @@ function loadDataTable() {
                     render: function (data) {
                         return `
                                 <div class="text-center">
-                                    <a href="Admin/Store/Upsert/${data}" class="btn btn-success text-white" style="cursor:pointer">
+                                    <a href="/Admin/Store/Upsert/${data}" class="btn btn-success text-white" style="cursor:pointer">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
                                     <a href="" class="btn btn-danger text-white" style="cursor:pointer">

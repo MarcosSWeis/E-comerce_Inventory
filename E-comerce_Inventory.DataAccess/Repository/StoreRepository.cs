@@ -31,8 +31,6 @@ namespace E_comerce_Inventory.DataAccess.Repository
                 storeDb.Description = store.Description;
                 storeDb.Name = store.Name;
                 storeDb.State = store.State;
-
-                _db.SaveChanges();
             }
         }
 
