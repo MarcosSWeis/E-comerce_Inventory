@@ -22,9 +22,4 @@
     <ProjectReference Include="..\E-comerce_Inventory.Utilities\E-comerce_Inventory.Utilities.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Areas\Admin\Controllers\" />
-    <Folder Include="Areas\Admin\Views\" />
-  </ItemGroup>
-
 </Project>

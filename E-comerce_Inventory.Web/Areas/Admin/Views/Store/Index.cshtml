@@ -1,0 +1,45 @@
+﻿@{  
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<br/>
+
+<div class="row">
+    <div class="col-6">
+        <h2 class="text-primary"> Lista de Tiendas</h2>
+    </div>
+    <div class="col-6 text-right">
+        <a class=" btn btn-primary"> <i class="bi bi-plus"></i>Crear nueva tienda</a>
+    </div>
+</div>
+
+<br />
+
+<div class="p-4 border rounded ">
+    <table class="table" id="tbl-data" style=" width:100%">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Decripción</th>
+                <th>Estado</th>
+                <th></th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+
+@*<div class="text-center">
+    <a href="Admin/Store/Upsert/Id" class="btn btn-success text-white" style="cursor:pointer">
+        <i class="bi bi-pencil-square"></i>
+    </a>
+    <a href="" class="btn btn-success text-white" style="cursor:pointer">
+       <i class="bi bi-trash3"></i>
+    </a>
+</div>*@
+
+@*creo una seccion llmada Scripts que llamara a todos los scripst relacionados*@
+@section Scripts{
+    <script src="~/js/store.js"></script>
+}
