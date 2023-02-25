@@ -34,7 +34,5 @@ namespace E_comerce_Inventory.DataAccess.Repository
             }
         }
 
-
-
     }
 }

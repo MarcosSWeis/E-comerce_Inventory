@@ -95,9 +95,6 @@ namespace E_comerce_Inventory.DataAccess.Repository
             return query.FirstOrDefault();
         }
 
-        //public T Update(T entity)
-        //{
-        //    throw new NotImplementedException();
-        //}
+
     }
 }

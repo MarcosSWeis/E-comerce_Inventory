@@ -15,5 +15,7 @@ namespace E_comerce_Inventory.DataAccess.Data
         { }
 
         public DbSet<Store> Stores { get; set; }
+        public DbSet<Category> Categories { get; set; }
+
     }
 }
