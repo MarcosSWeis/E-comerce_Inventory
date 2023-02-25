@@ -3,7 +3,11 @@
 $(document).ready(function () {
     loadDataTable();     
     $("#tbl-data").children("tbody").css("color", "black")
-
+    let tblData = document.getElementById("tbl-data_wrapper");  
+    let divs =  tblData.getElementsByTagName("div");
+    for (let i = 0; i < divs.length; i++) {
+        divs[i].style.color = "white"
+    } 
  });
 
 function loadDataTable() {
@@ -15,6 +19,21 @@ function loadDataTable() {
     
     dataTable = $("#tbl-data").DataTable(
         {
+            language: {
+                lengthMenu: "Mostrar _MENU_ Registros Por Pagina",
+                zeroRecords: "Ningun Registro",
+                info: "Mostrar page _PAGE_ de _PAGES_",
+                infoEmpty: "no hay registros",
+                infoFiltered: "(filtered from _MAX_ total registros)",
+                search: "Buscar",
+                paginate: {
+                    first: "Primero",
+                    last: "Último",
+                    next: "Siguiente",
+                    previous: "Anterior"
+                }
+                
+            },
             ajax: {
                 url: '/Admin/Store/GetAll',
 
