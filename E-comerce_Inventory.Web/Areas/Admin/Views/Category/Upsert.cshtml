@@ -1,0 +1,66 @@
+﻿@model E_comerce_Inventory.Models.DataModels.Category
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var title = "Crear Categoria";
+}
+
+<form method="post">
+    <div class="row p-3 border-0">
+        @*con esta etiqueta indico el lugar donde se mostaran todas errores de las validaciones de mi modelo*@
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    </div>
+
+    @if (Model.Id != 0)
+    {
+        //actualizar
+        title = "Actualizar Tienda";
+
+    }
+
+    <div class="col-12 border-bottom">
+        <h2 class="text-primary">@title</h2>
+    </div>
+
+    <div class="col-8 pt-4">
+            
+        <div class="form-group row ">
+            <div class="col-4">
+                @* con el tag helper asp-for capturo directamente el nombre de mi Store*@
+                <label asp-for="Name"></label>
+            </div>
+            <div class="col-8">
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-4">
+                <label asp-for="State"></label>
+            </div>
+            <div class="col-8">
+                <select asp-for="State" class="form-control">
+                    <option value=@true>Activo</option>
+                    <option value=@false>Inactivo</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="from-group row">
+            <div class="col-8 offset-4">
+                @if (Model.Id != 0)
+                {
+                    @* a traves  de la etiqueta model en el partialview le indico lo que le voy a envia en este caso un Id que ese modelo de vista recibe del otro lado*@
+                    <partial name="_ButtonsUpdateAndReturnPartial" model="Model.Id" />
+                } else
+                {
+                    <partial name="_ButtonsAddAndReturnPartial" />
+                }
+            </div>
+        </div>
+
+    </div>
+</form>
+@section Scripts{
+    @*llamamos a este partial view , que es el encargado de llamar a los scripts que se ejecutan cuando algo en la aplicacion falla*@
+    <partial name="_ValidationScriptsPartial"></partial>
+}

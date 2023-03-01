@@ -11,6 +11,8 @@ namespace E_comerce_Inventory.DataAccess.Repository.Interface
         //variable  de tipo IStoreRepository
         IStoreRepository Store { get; }
 
+        ICategoryRepository Category { get; }
+
         public void SaveChangesInDb();
 
     }

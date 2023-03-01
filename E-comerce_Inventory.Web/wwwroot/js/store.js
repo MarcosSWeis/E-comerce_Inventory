@@ -71,14 +71,15 @@ function loadDataTable() {
 }
 
 function Delete(url) { 
+    debugger
     Swal.fire({
         title: "Esta seguro de que desea eliminar esta tienda",
         text: "Este registro no se podra recuperar",
         icon: "warning",
-        buttons: true,
-        dangerMode: true
-    }).then((delet) => {
-        if (delet)
+        confirmButtonText: 'Si, eliminar!',
+        showCancelButton: true 
+    }).then((result) => {
+        if (result.isConfirmed)
         {
                 $.ajax({
                     type: "DELETE",
