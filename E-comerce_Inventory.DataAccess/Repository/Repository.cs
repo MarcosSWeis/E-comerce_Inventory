@@ -60,7 +60,7 @@ namespace E_comerce_Inventory.DataAccess.Repository
                 //Busco separar las propiedades por la coma y elimina del areglo que devulve los elementos vacios
                 foreach (var includePorperties in addProperties.Split(new char[] { ',' },StringSplitOptions.RemoveEmptyEntries))
                 {
-                    query.Include(includePorperties);
+                    query = query.Include(includePorperties);
                 }
             }
 

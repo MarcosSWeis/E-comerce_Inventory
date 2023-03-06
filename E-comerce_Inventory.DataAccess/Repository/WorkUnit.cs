@@ -14,11 +14,17 @@ namespace E_comerce_Inventory.DataAccess.Repository
         private readonly ApplicationDbContext _db;
         public IStoreRepository Store { get; private set; }
         public ICategoryRepository Category { get; private set; }
+
+        public IBrandRepository Brand { get; private set; }
+
+        public IProdutRepository Product { get; private set; }
         public WorkUnit(ApplicationDbContext db)
         {
             _db = db;
             Store = new StoreRepository(_db); //we initialize
             Category = new CategoryRepository(_db);//we initialize
+            Brand = new BrandRepository(_db);//we initialize
+            Product = new ProductRepoitory(_db);//we initialize
         }
 
 

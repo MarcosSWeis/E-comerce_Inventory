@@ -13,6 +13,10 @@ namespace E_comerce_Inventory.DataAccess.Repository.Interface
 
         ICategoryRepository Category { get; }
 
+        IBrandRepository Brand { get; }
+
+        IProdutRepository Product { get; }
+
         public void SaveChangesInDb();
 
     }
