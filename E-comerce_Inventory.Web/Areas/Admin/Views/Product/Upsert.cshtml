@@ -14,7 +14,7 @@
     @if ( Model.Product.Id != 0)
     {
         //actualizar
-        title = "Actualizar Tienda";
+        title = "Actualizar Producto";
 
         <input type="hidden" asp-for="Product.Id"/>
 
@@ -96,6 +96,15 @@
             </div>
         </div >
 
+        <div class="form-group row ">
+            <div class="col-4">
+                <label>Padre</label>
+            </div>
+            <div class="col-8">
+                @Html.DropDownListFor(vm=> vm.Product.ParentId, Model.ListParent, "Seleccione",new {@class="form-control"})               
+            </div>
+        </div>
+
         <div class="from-group row">
             <div class="col-8 offset-4">
                 @if (Model.Product.Id != 0)
@@ -115,8 +124,14 @@
                 }
             </div>
         </div>
-
     </div>
+
+    @if(Model.Product.Id !=0)
+    {
+    <div class="col-3 mt-4">
+         <img src="@Model.Product.ImageUrl" style="width:100% ; border-radius:5px ; border: 1px solid #375a7f"/>
+    </div>
+    }
 </form>
 @section Scripts{
    

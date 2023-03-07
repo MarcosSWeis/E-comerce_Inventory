@@ -50,7 +50,13 @@ namespace E_comerce_Inventory.Web.Areas.Admin.Controllers
                 {
                     Text = brand.Name,
                     Value = brand.Id.ToString(),
+                }),
+                ListParent = _workUnit.Product.GetAll().Select((parent) => new SelectListItem
+                {
+                    Text = parent.Description,
+                    Value = parent.Id.ToString(),
                 })
+
             };
 
             if (id == null)
@@ -86,17 +92,15 @@ namespace E_comerce_Inventory.Web.Areas.Admin.Controllers
                     {
                         //esto es para editar, por ende necesitamso borra la imagen anterior
                         var imgPath = Path.Combine(webRoootPath,productVM.Product.ImageUrl.TrimStart('\\'));
-                        if (System.IO.File.Exists(imgPath))//si existe la imagen en este entrorno y en ese directorio, a borro
-                        {
-                            System.IO.File.Delete(imgPath);
-                        }
+                        DeleteImage(imgPath);
                     }
 
                     using (var fileStreams = new FileStream(Path.Combine(uploads,fileName + extensionFile),FileMode.Create))
                     {
                         files[0].CopyTo(fileStreams);
                     }
-                    productVM.Product.ImageUrl = @"\img\product\" + fileName + extensionFile;
+                    productVM.Product.ImageUrl = @"\img\products\" + fileName + extensionFile;
+
                 } else
                 {
                     //si actualizo el resto de campos menos la imagen
@@ -137,7 +141,11 @@ namespace E_comerce_Inventory.Web.Areas.Admin.Controllers
                     Text = brand.Name,
                     Value = brand.Id.ToString(),
                 });
-
+                productVM.ListParent = _workUnit.Product.GetAll().Select((parent) => new SelectListItem
+                {
+                    Text = parent.Description,
+                    Value = parent.Id.ToString(),
+                });
 
                 if (productVM.Product.Id != 0)//actualizar
                 {
@@ -167,8 +175,13 @@ namespace E_comerce_Inventory.Web.Areas.Admin.Controllers
             if (productDb == null)
                 return Json(new { success = false,message = "Error al borrar producto" });
 
+            string webRoootPath = _hostEnviroment.WebRootPath;
+
+            var imgPath = Path.Combine(webRoootPath,productDb.ImageUrl.TrimStart('\\'));
+            DeleteImage(imgPath);
 
             _workUnit.Product.Delete(productDb);
+
 
             _workUnit.SaveChangesInDb();
 
@@ -176,6 +189,13 @@ namespace E_comerce_Inventory.Web.Areas.Admin.Controllers
         }
         #endregion
 
+        private void DeleteImage(string imgPath)
+        {
+            if (System.IO.File.Exists(imgPath))//si existe la imagen en este entrorno y en ese directorio, a borro
+            {
+                System.IO.File.Delete(imgPath);
+            }
+        }
 
     }
 }

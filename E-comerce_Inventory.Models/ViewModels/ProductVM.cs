@@ -15,5 +15,7 @@ namespace E_comerce_Inventory.Models.ViewModels
 
         public IEnumerable<SelectListItem> ListCategory { get; set; }
         public IEnumerable<SelectListItem> ListBrand { get; set; }
+        public IEnumerable<SelectListItem> ListParent { get; set; }
+
     }
 }
