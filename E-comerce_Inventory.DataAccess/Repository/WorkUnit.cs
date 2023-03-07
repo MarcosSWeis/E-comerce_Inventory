@@ -18,6 +18,7 @@ namespace E_comerce_Inventory.DataAccess.Repository
         public IBrandRepository Brand { get; private set; }
 
         public IProdutRepository Product { get; private set; }
+        public IUserAplicationRepository UserAplication { get; private set; }
         public WorkUnit(ApplicationDbContext db)
         {
             _db = db;
@@ -25,6 +26,7 @@ namespace E_comerce_Inventory.DataAccess.Repository
             Category = new CategoryRepository(_db);//we initialize
             Brand = new BrandRepository(_db);//we initialize
             Product = new ProductRepoitory(_db);//we initialize
+            UserAplication = new UserAplicationRepository(_db);
         }
 
 

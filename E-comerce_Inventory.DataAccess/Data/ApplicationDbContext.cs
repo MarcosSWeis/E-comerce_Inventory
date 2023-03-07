@@ -18,6 +18,7 @@ namespace E_comerce_Inventory.DataAccess.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<Brand> Brands { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<UserAplication> UsersAplication { get; set; }
 
 
     }

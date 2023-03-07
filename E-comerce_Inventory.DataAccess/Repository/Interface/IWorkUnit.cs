@@ -17,6 +17,8 @@ namespace E_comerce_Inventory.DataAccess.Repository.Interface
 
         IProdutRepository Product { get; }
 
+        IUserAplicationRepository UserAplication { get; }
+
         public void SaveChangesInDb();
 
     }
