@@ -1,11 +1,11 @@
 ﻿let dataTable;
 
 $(document).ready(function () {
-    fetch("/Admin/Product/GetAll").then((res )=> {
-        res.json().then((data )=> {
-            console.log(data)
-        })
-    })
+    //fetch("/Admin/Product/GetAll").then((res )=> {
+    //    res.json().then((data )=> {
+    //        console.log(data)
+    //    })
+    //})
     loadDataTable();
     $("#tbl-data").children("tbody").css("color", "black")
     let tblData = document.getElementById("tbl-data_wrapper");
@@ -42,7 +42,7 @@ function loadDataTable() {
             columns:
                 [
                     { data: "serialNumber", width: "15%" },
-                    { data: "description", width: "15%" },                  
+                    { data: "title", width: "15%" },            
                     { data: "category.name", width: "15%" }, //porque en la API le estoy mandanod la relacion 
                     { data: "brand.name", width: "15%" },//porque en la API le estoy mandanod la relacion 
                     { data: "price", width: "15%" },

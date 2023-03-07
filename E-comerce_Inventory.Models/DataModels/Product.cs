@@ -10,20 +10,23 @@ namespace E_comerce_Inventory.Models.DataModels
 {
     public class Product
     {
-        [Key, Required]
+        [Key, Required(ErrorMessage = "Campo requerido")]
         public int Id { get; set; }
-        [Required, MaxLength(30)]
+        [Required(ErrorMessage = "Campo requerido"), MaxLength(50,ErrorMessage = "El maximo de caracteres aceptados son 50")]
+        public string Title { get; set; }
+
+        [Required(ErrorMessage = "Campo requerido"), MaxLength(30,ErrorMessage = "El maximo de caracteres aceptados son 30")]
         public string SerialNumber { get; set; }
-        [Required, MaxLength(200)]
+
+        [Required(ErrorMessage = "Campo requerido"), MaxLength(200,ErrorMessage = "El maximo de caracteres aceptados son 200")]
         public string Description { get; set; }
 
-
-        [Required, Range(1,double.MaxValue), Column(TypeName = "money")]
+        [Required(ErrorMessage = "Campo requerido"), Range(1,double.MaxValue), Column(TypeName = "money")]
         public decimal Price { get; set; }
+
         [Column(TypeName = "money")]
         public decimal Cost { get; set; }
         public string ImageUrl { get; set; }
-
 
         #region Navigation Properties
         public int CategoryId { get; set; }

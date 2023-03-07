@@ -32,6 +32,8 @@ namespace E_comerce_Inventory.DataAccess.Repository
                 else
                     productDb.ParentId = product.ParentId;
 
+
+                productDb.Title = product.Title;
                 productDb.SerialNumber = product.SerialNumber;
                 productDb.Description = product.Description;
                 productDb.Price = product.Price;

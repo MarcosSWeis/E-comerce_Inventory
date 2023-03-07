@@ -38,7 +38,7 @@ namespace E_comerce_Inventory.Web.Areas.Admin.Controllers
         public IActionResult Upsert(int? id)
         {
             //inicializamos ProductoVM
-            ProductVM productVM = new ProductVM()
+            ProductVM productVM = new()
             {
                 Product = new Product(),
                 ListCategory = _workUnit.Category.GetAll().Select((category) => new SelectListItem
@@ -53,7 +53,7 @@ namespace E_comerce_Inventory.Web.Areas.Admin.Controllers
                 }),
                 ListParent = _workUnit.Product.GetAll().Select((parent) => new SelectListItem
                 {
-                    Text = parent.Description,
+                    Text = parent.Title,
                     Value = parent.Id.ToString(),
                 })
 
@@ -143,7 +143,7 @@ namespace E_comerce_Inventory.Web.Areas.Admin.Controllers
                 });
                 productVM.ListParent = _workUnit.Product.GetAll().Select((parent) => new SelectListItem
                 {
-                    Text = parent.Description,
+                    Text = parent.Title,
                     Value = parent.Id.ToString(),
                 });
 
@@ -163,6 +163,7 @@ namespace E_comerce_Inventory.Web.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
+
             return Json(new { data = _workUnit.Product.GetAll(addProperties: "Category,Brand") });
 
         }

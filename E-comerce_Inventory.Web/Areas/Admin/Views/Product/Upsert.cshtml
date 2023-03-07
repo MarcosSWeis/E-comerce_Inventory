@@ -35,6 +35,16 @@
                 <span asp-validation-for="Product.SerialNumber" class="text-danger"></span>
             </div>
         </div>
+
+        <div class="form-group row ">
+            <div class="col-4">
+                <label asp-for="Product.Title">Titulo</label>
+            </div>
+            <div class="col-8">
+                <input asp-for="Product.Title" placeholder="Titulo" class="form-control" />
+                <span asp-validation-for="Product.Title" class="text-danger"></span>
+            </div>
+        </div>
       
          <div class="form-group row ">
             <div class="col-4">            
