@@ -1,4 +1,6 @@
-﻿using E_comerce_Inventory.Models.ViewModels;
+﻿using E_comerce_Inventory.DataAccess.Repository.Interface;
+using E_comerce_Inventory.Models.DataModels;
+using E_comerce_Inventory.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -14,15 +16,18 @@ namespace E_comerce_Inventory.Web.Areas.Inventory.Controllers
     public class HomeController :Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IWorkUnit _workUnit;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger,IWorkUnit workUnit)
         {
             _logger = logger;
+            _workUnit = workUnit;
         }
 
         public IActionResult Index()
         {
-            return View();
+            IEnumerable<Product> productList = _workUnit.Product.GetAll(addProperties: nameof(Category) + "," + nameof(Brand));
+            return View(productList);
         }
 
         public IActionResult Privacy()
