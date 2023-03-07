@@ -15,10 +15,17 @@ namespace E_comerce_Inventory.Models.DataModels
         public string Name { get; set; }
         [Required]
         public string LastName { get; set; }
-        [Required]
         public string Dni { get; set; }
         [Required]
         public string Country { get; set; }
+
+        public string Address { get; set; }
+
+        public string City { get; set; }
+
+        public string PostalCode { get; set; }
+
+
 
         [NotMapped] //indico que no se debe agregar a mi base de datos
         public string Role { get; set; }
