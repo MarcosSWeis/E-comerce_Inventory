@@ -46,6 +46,18 @@ function loadDataTable() {
                     { data: "category.name", width: "15%" }, //porque en la API le estoy mandanod la relacion 
                     { data: "brand.name", width: "15%" },//porque en la API le estoy mandanod la relacion 
                     { data: "price", width: "15%" },
+                    {
+                        data: "imageUrl",
+                        render: function (data) {
+                            return `
+                                <div class="text-center " style="width:60px" >                                   
+                                <img src="${data}" class=" rounded-circle" style="width:100%" />  
+                                </div>
+                               `
+                        },
+                        width: "15%"
+                    },
+
                     //esta es la parte en la que se muetran los botne de editar y eliminar 
                     //con render le indicamos que quremos crear codigo html, le paso a data, ya que data es la que contiene el ID
                     {
