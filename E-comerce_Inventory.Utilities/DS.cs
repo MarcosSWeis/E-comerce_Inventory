@@ -11,6 +11,12 @@ namespace E_comerce_Inventory.Utilities
     /// </summary>
     public static class DS
     {
+        public const string Role_Customer = "customer";
+        public const string Role_Admin = "Admin";
+        public const string Role_Inventory = "Inventory";
+        public const string Role_Sales = "Sales";
+
+
 
     }
 }

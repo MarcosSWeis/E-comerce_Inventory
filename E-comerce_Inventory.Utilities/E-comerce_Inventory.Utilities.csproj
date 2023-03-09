@@ -5,4 +5,8 @@
     <RootNamespace>E_comerce_Inventory.Utilities</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.17" />
+  </ItemGroup>
+
 </Project>

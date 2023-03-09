@@ -2,15 +2,18 @@ using E_comerce_Inventory.DataAccess.Data;
 using E_comerce_Inventory.DataAccess.Repository;
 using E_comerce_Inventory.DataAccess.Repository.Interface;
 using E_comerce_Inventory.Models.DataModels;
+using E_comerce_Inventory.Utilities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,12 +37,29 @@ namespace E_comerce_Inventory.Web
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDatabaseDeveloperPageExceptionFilter();
-            services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<ApplicationDbContext>();
-            services.AddScoped<IWorkUnit,WorkUnit>();
+            services.AddIdentity<IdentityUser,IdentityRole>((options) =>
+            {
+                options.User.RequireUniqueEmail = true;//activo la validacion por email              
+                options.User.AllowedUserNameCharacters = null;//Desactivo la validacion por UserName
 
+            }
+            )
+            .AddDefaultTokenProviders().AddEntityFrameworkStores<ApplicationDbContext>();// services.AddDefaultIdentity NO ACEPTA ROLES
+            services.AddScoped<IWorkUnit,WorkUnit>();
+            services.AddSingleton<IEmailSender,EmailSender>();
 
             //al controlador de de vistas razor , depeus de haber instalado el packete le añado .AddRazorRuntimeCompilation() , para poder modificar las vistas en tiempo de ejecucion
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
+            services.AddRazorPages();
+            services.ConfigureApplicationCookie(options =>
+            {
+                // Cookie settings
+                options.Cookie.HttpOnly = true; //js no puede acceder a la cookie
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(5);//Establece el tiempo de caducidad de la cookie 
+                options.LoginPath = "/Identity/Account/Login";//Establece la ruta a la página de acceso denegado a la que se redirigirá al usuario si está autenticado pero no tiene acceso a un recurso en particular.
+                options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+                options.SlidingExpiration = true;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

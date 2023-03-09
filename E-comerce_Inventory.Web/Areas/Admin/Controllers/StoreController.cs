@@ -1,12 +1,17 @@
 ﻿using E_comerce_Inventory.DataAccess.Repository.Interface;
 using E_comerce_Inventory.Models.DataModels;
+using E_comerce_Inventory.Utilities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
+using System.Data;
 
 namespace E_comerce_Inventory.Web.Areas.Admin.Controllers
 {
     //Le indico al controlador el area al que pertenece
     [Area("Admin")]
+    [Authorize(Roles = DS.Role_Admin)]
+
     public class StoreController :Controller
     {
         private readonly IWorkUnit _workUnit;

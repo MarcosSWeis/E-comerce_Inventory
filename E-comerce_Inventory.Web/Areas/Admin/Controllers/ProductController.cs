@@ -1,16 +1,21 @@
 ﻿using E_comerce_Inventory.DataAccess.Repository.Interface;
 using E_comerce_Inventory.Models.DataModels;
 using E_comerce_Inventory.Models.ViewModels;
+using E_comerce_Inventory.Utilities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
+using System.Data;
 using System.IO;
 using System.Linq;
 
 namespace E_comerce_Inventory.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = DS.Role_Admin + "," + DS.Role_Inventory)]
+
     public class ProductController :Controller
     {
         private readonly IWorkUnit _workUnit;

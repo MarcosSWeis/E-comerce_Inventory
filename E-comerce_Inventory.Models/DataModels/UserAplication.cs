@@ -15,6 +15,7 @@ namespace E_comerce_Inventory.Models.DataModels
         public string Name { get; set; }
         [Required]
         public string LastName { get; set; }
+
         public string Dni { get; set; }
         [Required]
         public string Country { get; set; }

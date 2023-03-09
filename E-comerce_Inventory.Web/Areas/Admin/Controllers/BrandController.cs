@@ -1,10 +1,13 @@
 ﻿using E_comerce_Inventory.DataAccess.Repository.Interface;
 using E_comerce_Inventory.Models.DataModels;
+using E_comerce_Inventory.Utilities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_comerce_Inventory.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = DS.Role_Admin)]
     public class BrandController :Controller
     {
         private readonly IWorkUnit _workUnit;
