@@ -46,7 +46,7 @@ namespace E_comerce_Inventory.Web
             )
             .AddDefaultTokenProviders().AddEntityFrameworkStores<ApplicationDbContext>();// services.AddDefaultIdentity NO ACEPTA ROLES
             services.AddScoped<IWorkUnit,WorkUnit>();
-            services.AddSingleton<IEmailSender,EmailSender>();
+            services.AddSingleton<IEmailSender,EmailSender>(sp => new EmailSender(sp.GetService<IConfiguration>()));
 
             //al controlador de de vistas razor , depeus de haber instalado el packete le añado .AddRazorRuntimeCompilation() , para poder modificar las vistas en tiempo de ejecucion
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
