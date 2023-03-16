@@ -29,5 +29,7 @@ namespace E_comerce_Inventory.DataAccess.Repository.Interface
         void Delete(T entity);
 
         void DeleteRange(IEnumerable<T> entities);
+
+
     }
 }

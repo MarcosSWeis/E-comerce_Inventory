@@ -1,12 +1,19 @@
 ﻿using E_comerce_Inventory.DataAccess.Data;
 using E_comerce_Inventory.DataAccess.Repository.Interface;
+using E_comerce_Inventory.Models.DataModels;
+using E_comerce_Inventory.Utilities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.DependencyModel;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace E_comerce_Inventory.DataAccess.Repository
 {
@@ -61,7 +68,9 @@ namespace E_comerce_Inventory.DataAccess.Repository
                 foreach (var includePorperties in addProperties.Split(new char[] { ',' },StringSplitOptions.RemoveEmptyEntries))
                 {
                     query = query.Include(includePorperties);
+
                 }
+                return query.ToList();
             }
 
             if (orderBy != null)
@@ -69,6 +78,7 @@ namespace E_comerce_Inventory.DataAccess.Repository
 
             return query.ToList();
         }
+
 
         public T GetById(int id)
         {

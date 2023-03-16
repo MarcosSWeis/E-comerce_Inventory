@@ -59,6 +59,69 @@ namespace E_comerce_Inventory.DataAccess.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("E_comerce_Inventory.Models.DataModels.DetailInventory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("InventoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NewStock")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OldStock")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProducId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InventoryId");
+
+                    b.HasIndex("ProducId");
+
+                    b.ToTable("DetailInventories");
+                });
+
+            modelBuilder.Entity("E_comerce_Inventory.Models.DataModels.Inventory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("FinalDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("InitialDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("State")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("StoreId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserAplicationId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StoreId");
+
+                    b.HasIndex("UserAplicationId");
+
+                    b.ToTable("Inventories");
+                });
+
             modelBuilder.Entity("E_comerce_Inventory.Models.DataModels.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -133,6 +196,31 @@ namespace E_comerce_Inventory.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Stores");
+                });
+
+            modelBuilder.Entity("E_comerce_Inventory.Models.DataModels.StoreProduct", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ProdutId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StoreId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProdutId");
+
+                    b.HasIndex("StoreId");
+
+                    b.ToTable("StoreProducts");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -284,12 +372,10 @@ namespace E_comerce_Inventory.DataAccess.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderKey")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -326,12 +412,10 @@ namespace E_comerce_Inventory.DataAccess.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -372,6 +456,44 @@ namespace E_comerce_Inventory.DataAccess.Migrations
                     b.HasDiscriminator().HasValue("UserAplication");
                 });
 
+            modelBuilder.Entity("E_comerce_Inventory.Models.DataModels.DetailInventory", b =>
+                {
+                    b.HasOne("E_comerce_Inventory.Models.DataModels.Inventory", "Inventory")
+                        .WithMany()
+                        .HasForeignKey("InventoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("E_comerce_Inventory.Models.DataModels.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProducId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Inventory");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("E_comerce_Inventory.Models.DataModels.Inventory", b =>
+                {
+                    b.HasOne("E_comerce_Inventory.Models.DataModels.Store", "Store")
+                        .WithMany()
+                        .HasForeignKey("StoreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("E_comerce_Inventory.Models.DataModels.UserAplication", "UserAplication")
+                        .WithMany()
+                        .HasForeignKey("UserAplicationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Store");
+
+                    b.Navigation("UserAplication");
+                });
+
             modelBuilder.Entity("E_comerce_Inventory.Models.DataModels.Product", b =>
                 {
                     b.HasOne("E_comerce_Inventory.Models.DataModels.Brand", "Brand")
@@ -395,6 +517,25 @@ namespace E_comerce_Inventory.DataAccess.Migrations
                     b.Navigation("Category");
 
                     b.Navigation("Parent");
+                });
+
+            modelBuilder.Entity("E_comerce_Inventory.Models.DataModels.StoreProduct", b =>
+                {
+                    b.HasOne("E_comerce_Inventory.Models.DataModels.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProdutId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("E_comerce_Inventory.Models.DataModels.Store", "Store")
+                        .WithMany()
+                        .HasForeignKey("StoreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("Store");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

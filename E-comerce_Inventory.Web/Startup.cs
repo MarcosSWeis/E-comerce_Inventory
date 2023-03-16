@@ -34,8 +34,12 @@ namespace E_comerce_Inventory.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
+            {
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                    Configuration.GetConnectionString("DefaultConnection"));
+
+            });
+
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddIdentity<IdentityUser,IdentityRole>((options) =>
             {

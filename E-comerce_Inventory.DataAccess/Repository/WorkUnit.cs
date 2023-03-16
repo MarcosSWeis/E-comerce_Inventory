@@ -1,5 +1,6 @@
 ﻿using E_comerce_Inventory.DataAccess.Data;
 using E_comerce_Inventory.DataAccess.Repository.Interface;
+using E_comerce_Inventory.Models.DataModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,11 @@ namespace E_comerce_Inventory.DataAccess.Repository
 
         public IProdutRepository Product { get; private set; }
         public IUserAplicationRepository UserAplication { get; private set; }
+
+        public IInventoryRepository Inventory { get; private set; }
+
+        public IStorePorductRepository StorePorduct { get; private set; }
+
         public WorkUnit(ApplicationDbContext db)
         {
             _db = db;
@@ -27,6 +33,9 @@ namespace E_comerce_Inventory.DataAccess.Repository
             Brand = new BrandRepository(_db);//we initialize
             Product = new ProductRepoitory(_db);//we initialize
             UserAplication = new UserAplicationRepository(_db);
+            Inventory = new InventoryRepository(_db);
+            StorePorduct = new StorePorductRepository(_db);
+
         }
 
 

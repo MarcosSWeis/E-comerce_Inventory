@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace E_comerce_Inventory.DataAccess.Migrations
 {
-    public partial class addtheMigrationsAgain : Migration
+    public partial class removeAndCrateNewMigrations : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -26,6 +26,14 @@ namespace E_comerce_Inventory.DataAccess.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Dni = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Country = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    City = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PostalCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -135,8 +143,8 @@ namespace E_comerce_Inventory.DataAccess.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    ProviderKey = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
@@ -180,8 +188,8 @@ namespace E_comerce_Inventory.DataAccess.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -234,6 +242,91 @@ namespace E_comerce_Inventory.DataAccess.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Inventories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserAplicationId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    InitialDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FinalDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    StoreId = table.Column<int>(type: "int", nullable: false),
+                    State = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Inventories", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Inventories_AspNetUsers_UserAplicationId",
+                        column: x => x.UserAplicationId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Inventories_Stores_StoreId",
+                        column: x => x.StoreId,
+                        principalTable: "Stores",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StoreProducts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StoreId = table.Column<int>(type: "int", nullable: false),
+                    ProdutId = table.Column<int>(type: "int", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StoreProducts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_StoreProducts_Products_ProdutId",
+                        column: x => x.ProdutId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_StoreProducts_Stores_StoreId",
+                        column: x => x.StoreId,
+                        principalTable: "Stores",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DetailInventories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    InventoryId = table.Column<int>(type: "int", nullable: false),
+                    ProducId = table.Column<int>(type: "int", nullable: false),
+                    OldStock = table.Column<int>(type: "int", nullable: false),
+                    NewStock = table.Column<int>(type: "int", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DetailInventories", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DetailInventories_Inventories_InventoryId",
+                        column: x => x.InventoryId,
+                        principalTable: "Inventories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DetailInventories_Products_ProducId",
+                        column: x => x.ProducId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -274,6 +367,26 @@ namespace E_comerce_Inventory.DataAccess.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_DetailInventories_InventoryId",
+                table: "DetailInventories",
+                column: "InventoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DetailInventories_ProducId",
+                table: "DetailInventories",
+                column: "ProducId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Inventories_StoreId",
+                table: "Inventories",
+                column: "StoreId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Inventories_UserAplicationId",
+                table: "Inventories",
+                column: "UserAplicationId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Products_BrandId",
                 table: "Products",
                 column: "BrandId");
@@ -287,6 +400,16 @@ namespace E_comerce_Inventory.DataAccess.Migrations
                 name: "IX_Products_ParentId",
                 table: "Products",
                 column: "ParentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StoreProducts_ProdutId",
+                table: "StoreProducts",
+                column: "ProdutId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StoreProducts_StoreId",
+                table: "StoreProducts",
+                column: "StoreId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -307,16 +430,25 @@ namespace E_comerce_Inventory.DataAccess.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Products");
+                name: "DetailInventories");
 
             migrationBuilder.DropTable(
-                name: "Stores");
+                name: "StoreProducts");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
+                name: "Inventories");
+
+            migrationBuilder.DropTable(
+                name: "Products");
+
+            migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Stores");
 
             migrationBuilder.DropTable(
                 name: "Brands");
