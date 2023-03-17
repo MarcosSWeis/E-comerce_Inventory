@@ -57,10 +57,13 @@ namespace E_comerce_Inventory.DataAccess.Repository
         public IEnumerable<T> GetAll(Expression<Func<T,bool>> filter = null,Func<IQueryable<T>,IOrderedQueryable<T>> orderBy = null,string addProperties = null)
         {
             IQueryable<T> query = dbSet;
+
+
             if (filter != null)
             {
                 query = query.Where(filter);
             }
+
 
             if (addProperties != null)
             {
@@ -70,11 +73,15 @@ namespace E_comerce_Inventory.DataAccess.Repository
                     query = query.Include(includePorperties);
 
                 }
-                return query.ToList();
+                return query;
             }
+
+
+
 
             if (orderBy != null)
                 return orderBy(query).ToList();
+
 
             return query.ToList();
         }

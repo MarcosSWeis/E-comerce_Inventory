@@ -1,0 +1,124 @@
+﻿@model E_comerce_Inventory.Models.ViewModels.InventoryVeiwModel
+
+@{
+    ViewData["Title"] = "Nuevo Inventario";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card-header bg-dark text-light ml-0 row container">
+    <div class="col-6">
+        <i class="bi bi-boxes"></i> Nuevo Inventario
+    </div>
+</div>
+
+<form method="post" class="p-2">
+
+    <input asp-for="@Model.Inventory.Id" name="inventoryId" hidden/>
+    <div class="form-group row">
+
+        <div class="col-2">
+            <label class="col-form-label" style="text-align:right">Tiendas</label>
+        </div>
+        <div class="col-4">
+            @Html.DropDownListFor(s=> s.Inventory.StoreId , Model.StoreList, new { @class= "form-control"} )
+            <span asp-validation-for="Inventory.StoreId"></span>
+        </div>
+    </div> 
+    <div class="form-group row">
+        <div class=" col-2 ">
+                <label class="col-form-label" style="text-align:right">Productos</label>
+            </div>
+        <div class=" col-3 ">
+               <select name="product" asp-items="Model.ProductList" class="form-control"></select>     
+            </div>
+
+        <div class=" col-1">
+                <label class="col-form-label">Cantidad</label>
+        </div>
+        <div class=" col-1">
+            <input class="col-md-12 from-control" name="quantity" id="quantity" maxlength="3" type="number" min="1" value="1" />
+            </div>
+        <div class=" col-4 ">
+            <button type="submit" class="btn btn-primary col-md-6" asp-action="AddProductPost"  id="btnProduct">
+                    <i class="bi bi-plus-circle-fill"></i> Agregar
+               </button>
+         </div>
+    </div>
+</form>
+
+<div>
+    <table class="table table-striped border">
+        <thead class="thead-dark">
+            <tr class="table-secondary thead-dark">
+                <th>Producto</th>
+                <th>Marca</th>
+                <th>Costo</th>
+                <th>Stock</th>
+                <th>Cantidad</th>
+                <th></th>
+            </tr>
+        </thead>
+          <tbody>
+              @foreach (var item in Model.DetailsInventories)
+                {
+                <tr>
+                   <th>
+                        @Html.DisplayFor(x=> item.Product.Title)
+                   </th>                
+                
+                   <th>
+                        @Html.DisplayFor(x=> item.Product.Brand.Name)
+                   </th>              
+               
+                   <th>
+                        @Html.DisplayFor(x=> item.Product.Cost)
+                   </th>            
+             
+                   <th>
+                        @Html.DisplayFor(x=> item.OldStock)
+                   </th>               
+              
+                   <th style="font-weight:bold">
+                        @Html.DisplayFor(x=> item.Quantity)
+                   </th>
+                    <th style="font-weight:bold">
+                        <a  class="btn btn-light" asp-action="AddQuantity" asp-route-id="@item.Id"><i class="bi bi-plus-circle"></i></a>
+                        <a class="btn btn-light" asp-action="ReduceQuantity" asp-route-id="@item.Id"><i class="bi bi-dash-circle"></i></a>
+                    </th>
+                </tr>
+                }
+          </tbody>
+
+    </table>
+</div>
+
+
+@if(Model.DetailsInventories.Count() > 0)
+{
+    <div class="aling-content-lg-center">
+        <div class="col-2">
+
+            <a asp-action="GenerateStock" class="btn btn-warning form-control" asp-route-id="@Model.Inventory.Id">
+                <i class="bi bi-download"></i>
+            </a>
+        </div>
+    </div>
+}
+
+@section Scripts {
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+
+        $(btnProduct).click(function (){
+            let quantity = document.getElementById("quantity").value;
+            if (quantity.toString() == "" || quantity <1) 
+            {
+                Swal.fire("Error","Seleccione una cantidad correcta","error")
+                return false
+            }
+        })
+    </script>
+}

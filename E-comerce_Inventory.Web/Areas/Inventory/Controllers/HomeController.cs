@@ -26,7 +26,7 @@ namespace E_comerce_Inventory.Web.Areas.Inventory.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<Product> productList = _workUnit.Product.GetAll(addProperties: nameof(Category) + "," + nameof(Brand));
+            IEnumerable<Product> productList = _workUnit.Product.GetAll(addProperties: $"{nameof(Category)},{nameof(Brand)}");
             return View(productList);
         }
 
