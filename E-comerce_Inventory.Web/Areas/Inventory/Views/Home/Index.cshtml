@@ -23,6 +23,10 @@
                                     Precio : <b>@product.Price.ToString("C",new CultureInfo("es-AR"))</b>
                                 </p>
                          </div>
+
+                         <div class="">
+                             <a asp-action="Detail" class="btn btn-primary form-control" asp-route-id="@product.Id">Detalle</a>
+                         </div>
                     </div>
                 
                 </div>
