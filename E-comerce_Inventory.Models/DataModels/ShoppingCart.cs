@@ -26,7 +26,7 @@ namespace E_comerce_Inventory.Models.DataModels
         public UserAplication UserAplication { get; set; }
 
         [Required]
-        public string ProductId { get; set; }
+        public int ProductId { get; set; }
 
         [ForeignKey("ProductId")]
         public Product Product { get; set; }
