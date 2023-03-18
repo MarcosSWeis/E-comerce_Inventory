@@ -1,4 +1,6 @@
 ﻿@using E_comerce_Inventory.Utilities;
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor httpContectAccessor
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -75,6 +77,26 @@
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" asp-area="Inventory" asp-controller="Inventory" asp-action="Index">Stock</a>
                                 </div>
+                            </li>
+                        }
+                        @if(httpContectAccessor.HttpContext.Session.GetInt32(DS.ssShoppingCart)!=null)
+                        {
+                            //si es distina de null indica que hay usuario conectado y que la session esta llena
+                            <li class="" style="color:white">
+                                <a asp-area="Inventory" asp-controller="ShoppingCart" asp-action="Index"  class="nav-link">
+                                    @{
+                                        var numberOfProduct = httpContectAccessor.HttpContext.Session.GetInt32(DS.ssShoppingCart); //guardo el valor de la cantidad de productos que hay en el carro
+                                        //&nbsp esto es un espacio
+                                    }
+                                    <i class="bi bi-cart-fill rotate-180"></i> &nbsp; (@numberOfProduct)
+                                </a>
+                            </li>
+                        } else //en caso de que no este llena
+                        {
+                            <li>
+                                <a href="#" class="nav-link">
+                                    <i class="bi bi-cart-fill rotate-180"></i> &nbsp; (0)
+                                </a>
                             </li>
                         }
                     </ul>

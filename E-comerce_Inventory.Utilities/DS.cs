@@ -15,6 +15,7 @@ namespace E_comerce_Inventory.Utilities
         public const string Role_Admin = "Admin";
         public const string Role_Inventory = "Inventory";
         public const string Role_Sales = "Sales";
+        public const string ssShoppingCart = "Session ShoppingCart";
 
 
 

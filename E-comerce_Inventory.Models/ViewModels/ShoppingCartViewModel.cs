@@ -12,6 +12,8 @@ namespace E_comerce_Inventory.Models.ViewModels
         public Company Company { get; set; }
         public StoreProduct StoreProduct { get; set; }
         public ShoppingCart ShoppingCart { get; set; }
+        public IEnumerable<ShoppingCart> ShoppingCartList { get; set; }
+        public Order Order { get; set; }
 
     }
 }

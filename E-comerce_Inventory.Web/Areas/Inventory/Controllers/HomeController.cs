@@ -2,7 +2,9 @@
 using E_comerce_Inventory.DataAccess.Repository.Interface;
 using E_comerce_Inventory.Models.DataModels;
 using E_comerce_Inventory.Models.ViewModels;
+using E_comerce_Inventory.Utilities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -34,7 +36,13 @@ namespace E_comerce_Inventory.Web.Areas.Inventory.Controllers
 
         public IActionResult Index()
         {
+
             IEnumerable<Product> productList = _workUnit.Product.GetAll(addProperties: $"{nameof(Category)},{nameof(Brand)}");
+            if (this.ClaimIsConnect())
+            {
+                SendNumberOfProductToSession();
+            }
+
             return View(productList);
         }
 
@@ -47,11 +55,8 @@ namespace E_comerce_Inventory.Web.Areas.Inventory.Controllers
         [Authorize] //tiene que estar registrado
         public IActionResult Detail(ShoppingCartViewModel shoppingCartVm)
         {
-            //user of de session
-            var claimIdentity = (ClaimsIdentity) User.Identity;
-            var claim = claimIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
-            shoppingCartVm.ShoppingCart.UserAplicationId = claim.Value;
+            shoppingCartVm.ShoppingCart.UserAplicationId = this.GetClaim().Value;
 
             //miro en la db si este producto ya esta en el carro de usuario
 
@@ -70,7 +75,12 @@ namespace E_comerce_Inventory.Web.Areas.Inventory.Controllers
             }
             _workUnit.SaveChangesInDb();
 
-            return RedirectToAction("Index");
+            //Cunndo agregamos al go al carrito es cuando le damos el valor a la session
+            int numberOfProduct = _workUnit.ShoppingCart.GetAll(sc => sc.UserAplicationId == shoppingCartVm.ShoppingCart.UserAplicationId).ToList().Count();
+
+            HttpContext.Session.SetInt32(DS.ssShoppingCart,numberOfProduct);
+
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Detail(int id)
@@ -105,6 +115,30 @@ namespace E_comerce_Inventory.Web.Areas.Inventory.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+
+        private bool ClaimIsConnect()
+        {
+            //user of de session
+            var claimIdentity = (ClaimsIdentity) User.Identity;
+            var claim = claimIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            return claim != null;
+        }
+
+        private Claim GetClaim()
+        {
+            //user of de session
+            var claimIdentity = (ClaimsIdentity) User.Identity;
+            var claim = claimIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            return claim;
+        }
+
+        private void SendNumberOfProductToSession()
+        {
+            int numberOfProduct = _workUnit.ShoppingCart.GetAll(sc => sc.UserAplicationId == this.GetClaim().Value).ToList().Count();
+
+            HttpContext.Session.SetInt32(DS.ssShoppingCart,numberOfProduct);
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using E_comerce_Inventory.DataAccess.Repository.Interface;
+using E_comerce_Inventory.Utilities;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -98,6 +100,12 @@ namespace E_comerce_Inventory.Web.Areas.Identity.Pages.Account
 
                     if (result.Succeeded)
                     {
+                        //una vez validado todo, identifico el usuario que se esta por logear y le cargo su carrito en session
+                        var userConnected = _workUnit.UserAplication.GetFirst(ua => ua.UserName == Input.Email);
+                        int numberOfProduct = _workUnit.ShoppingCart.GetAll(sc => sc.UserAplicationId == userConnected.Id).ToList().Count();
+                        HttpContext.Session.SetInt32(DS.ssShoppingCart,numberOfProduct);
+
+
                         _logger.LogInformation("User logged in.");
                         return LocalRedirect(returnUrl);
                     }
