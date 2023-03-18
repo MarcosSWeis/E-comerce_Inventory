@@ -43,6 +43,7 @@
                                         @if(User.IsInRole(DS.Role_Admin))
                                         {
                                              <a class="dropdown-item" asp-area="Admin" asp-controller="Store" asp-action="Index">Tiendas</a>
+                                        <a class="dropdown-item" asp-area="Admin" asp-controller="Company" asp-action="Index">Compania</a>
                                             <a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">Categorias</a>
                                             <a class="dropdown-item" asp-area="Admin" asp-controller="Brand" asp-action="Index">Marcas</a>                                                              
                                         }

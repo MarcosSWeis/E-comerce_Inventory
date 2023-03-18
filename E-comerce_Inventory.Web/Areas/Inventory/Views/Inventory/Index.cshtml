@@ -5,12 +5,9 @@
 <br />
 
 <div class="row" id="table-store">
-    <div class="col-9 text-left ">
+    <div class="col-6 text-left ">
         <h2 class="text-primary">Stock de Productos</h2>
-    </div>
-    <div class="col-3 text-right mt-3 ">
-        <a class=" btn btn-primary" asp-action="NewInventory"> <i class="bi bi-plus"></i>Crear nuevo inventario</a>
-    </div>
+    </div>  
 </div>
 
 <br />
@@ -28,6 +25,12 @@
     </table>
 </div>
 
+
+<div class="col-6 p-2">
+    <a class="btn btn-success" asp-action="Historic">
+        <i class="bi bi-calendar-date"></i>
+    </a>
+</div>
 
 @section Scripts {
     <script src="~/js/inventory.js"></script>

@@ -1,0 +1,60 @@
+﻿@model IEnumerable<E_comerce_Inventory.Models.DataModels.DetailInventory>
+@{
+    ViewData["Title"] = "Detall Historial";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div>
+
+    <div>
+        <h2 class="text-primary">
+            Detalle del Historial de Inventario
+        </h2>
+    </div>
+
+
+    <div>
+        <table class="table table-striped border">
+            <thead class="thead-dark">
+                <tr class="table-secondary thead-dark">
+                    <th>Producto</th>
+                    <th>Marca</th>
+                    <th>Costo</th>
+                    <th>Stock anterior</th>
+                    <th>Cantidad</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <th>
+                            @Html.DisplayFor(x=> item.Product.Title)
+                        </th>
+
+                        <th>
+                            @Html.DisplayFor(x=> item.Product.Brand.Name)
+                        </th>
+
+                        <th>
+                            @Html.DisplayFor(x=> item.Product.Cost)
+                        </th>
+
+                        <th>
+                            @Html.DisplayFor(x=> item.OldStock)
+                        </th>
+
+                        <th style="font-weight:bold">
+                            @Html.DisplayFor(x=> item.Quantity)
+                        </th>                        
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+    </div>
+</div>
+
+ <div>
+     <a class="btn btn-success" asp-action="Historic">Regrasar</a>
+ </div>

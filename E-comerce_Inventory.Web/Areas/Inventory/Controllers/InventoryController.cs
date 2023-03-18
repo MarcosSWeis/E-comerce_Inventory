@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace E_comerce_Inventory.Web.Areas.Inventory.Controllers
 {
@@ -76,6 +77,62 @@ namespace E_comerce_Inventory.Web.Areas.Inventory.Controllers
             return RedirectToAction("NewInventory",new { inventoryId = inventoryVeiwModel.Inventory.Id });
 
         }
+        [HttpPost]
+        public IActionResult AddProductPost(int product,int quantity,int inventoryId) //los nombre deben ser los mismos que el name de los campos del formulario asi matchean y son recibidos de lo contrario no seran reconocidos
+        {
+            InventoryVeiwModel.Inventory.Id = inventoryId;
+            if (InventoryVeiwModel.Inventory.Id == 0)//guarda el registro en el inventario
+            {
+                InventoryVeiwModel.Inventory.State = false;
+                InventoryVeiwModel.Inventory.InitialDate = DateTime.Now;
+                //capturo el user de la sesicon
+                ClaimsIdentity claimsIdentity = (ClaimsIdentity) User.Identity;
+                var claims = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+                InventoryVeiwModel.Inventory.UserAplicationId = claims.Value; //Value me da el Id del mi usuario 
+
+                _workUnit.Inventory.Add(InventoryVeiwModel.Inventory);
+
+                _workUnit.SaveChangesInDb();
+            } else //el inventario ya existe
+            {
+                InventoryVeiwModel.Inventory = _workUnit.Inventory.GetById(inventoryId);
+            }
+
+            var storeProduct = _workUnit.StorePorduct.GetAll(sp => sp.ProdutId == product && sp.StoreId == InventoryVeiwModel.Inventory.StoreId,addProperties: $"{nameof(Product)}").FirstOrDefault();
+
+            var detail = _workUnit.DetailInventory.GetAll(di => di.ProducId == product && di.InventoryId == InventoryVeiwModel.Inventory.Id,addProperties: $"{nameof(Product)}").FirstOrDefault();
+
+            if (detail == null) //no hay dettale de ese producto en ese inventario
+            {
+                InventoryVeiwModel.DetailInventory = new DetailInventory();
+                InventoryVeiwModel.DetailInventory.ProducId = product;
+                InventoryVeiwModel.DetailInventory.InventoryId = InventoryVeiwModel.Inventory.Id;
+
+                if (storeProduct != null)//sim hay un registro en la tienda producto
+                {
+                    InventoryVeiwModel.DetailInventory.OldStock = storeProduct.Quantity;
+                } else //si no hay un registro en storeProduct
+                {
+                    InventoryVeiwModel.DetailInventory.OldStock = 0;
+                }
+
+                InventoryVeiwModel.DetailInventory.Quantity = quantity;
+
+                _workUnit.DetailInventory.Add(InventoryVeiwModel.DetailInventory);
+
+                _workUnit.SaveChangesInDb();
+
+
+            } else //si ya hau un detalle con ese codigo
+            {
+                detail.Quantity += quantity;
+
+                _workUnit.SaveChangesInDb();
+
+            }
+            //vista , prametro del mismo nombre que tiene esa vista es decir inventoryId
+            return RedirectToAction("NewInventory",new { inventoryId = InventoryVeiwModel.Inventory.Id });
+        }
 
         public IActionResult ReduceQuantity(int id)
         {
@@ -134,6 +191,18 @@ namespace E_comerce_Inventory.Web.Areas.Inventory.Controllers
 
         }
 
+        public IActionResult Historic()
+        {
+            return View();
+        }
+
+        public IActionResult DetailHistoric(int id)
+        {
+            var detailHistoric = _workUnit.DetailInventory.GetAll(di => di.InventoryId == id,addProperties: $"{nameof(Product)},{nameof(Product)}.{nameof(Brand)}");
+            return View(detailHistoric);
+        }
+
+
         #region API
         [HttpGet]
         public IActionResult GetAll()
@@ -144,63 +213,15 @@ namespace E_comerce_Inventory.Web.Areas.Inventory.Controllers
             return Json(new { data = query.ToList() });
         }
 
-        [HttpPost]
-        public IActionResult AddProductPost(int product,int quantity,int inventoryId) //los nombre deben ser los mismos que el name de los campos del formulario asi matchean y son recibidos de lo contrario no seran reconocidos
+
+
+        [HttpGet]
+        public IActionResult GetHistoric()
         {
-            InventoryVeiwModel.Inventory.Id = inventoryId;
-            if (InventoryVeiwModel.Inventory.Id == 0)//guarda el registro en el inventario
-            {
-                InventoryVeiwModel.Inventory.State = false;
-                InventoryVeiwModel.Inventory.InitialDate = DateTime.Now;
-                //capturo el user de la sesicon
-                ClaimsIdentity claimsIdentity = (ClaimsIdentity) User.Identity;
-                var claims = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-                InventoryVeiwModel.Inventory.UserAplicationId = claims.Value; //Value me da el Id del mi usuario 
+            var allFields = _workUnit.Inventory.GetAll(i => i.State == true,addProperties: $"{nameof(Store)},{nameof(UserAplication)}");
+            return Json(new { data = allFields });
 
-                _workUnit.Inventory.Add(InventoryVeiwModel.Inventory);
-
-                _workUnit.SaveChangesInDb();
-            } else //el inventario ya existe
-            {
-                InventoryVeiwModel.Inventory = _workUnit.Inventory.GetById(inventoryId);
-            }
-
-            var storeProduct = _workUnit.StorePorduct.GetAll(sp => sp.ProdutId == product && sp.StoreId == InventoryVeiwModel.Inventory.StoreId,addProperties: $"{nameof(Product)}").FirstOrDefault();
-
-            var detail = _workUnit.DetailInventory.GetAll(di => di.ProducId == product && di.InventoryId == InventoryVeiwModel.Inventory.Id,addProperties: $"{nameof(Product)}").FirstOrDefault();
-
-            if (detail == null) //no hay dettale de ese producto en ese inventario
-            {
-                InventoryVeiwModel.DetailInventory = new DetailInventory();
-                InventoryVeiwModel.DetailInventory.ProducId = product;
-                InventoryVeiwModel.DetailInventory.InventoryId = InventoryVeiwModel.Inventory.Id;
-
-                if (storeProduct != null)//sim hay un registro en la tienda producto
-                {
-                    InventoryVeiwModel.DetailInventory.OldStock = storeProduct.Quantity;
-                } else //si no hay un registro en storeProduct
-                {
-                    InventoryVeiwModel.DetailInventory.OldStock = 0;
-                }
-
-                InventoryVeiwModel.DetailInventory.Quantity = quantity;
-
-                _workUnit.DetailInventory.Add(InventoryVeiwModel.DetailInventory);
-
-                _workUnit.SaveChangesInDb();
-
-
-            } else //si ya hau un detalle con ese codigo
-            {
-                detail.Quantity += quantity;
-
-                _workUnit.SaveChangesInDb();
-
-            }
-            //vista , prametro del mismo nombre que tiene esa vista es decir inventoryId
-            return RedirectToAction("NewInventory",new { inventoryId = InventoryVeiwModel.Inventory.Id });
         }
-
         #endregion
     }
 }

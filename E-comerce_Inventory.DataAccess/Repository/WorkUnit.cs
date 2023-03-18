@@ -25,6 +25,8 @@ namespace E_comerce_Inventory.DataAccess.Repository
 
         public IStorePorductRepository StorePorduct { get; private set; }
         public IDetailInventoryRepository DetailInventory { get; set; }
+
+        public ICompanyRepository Company { get; private set; }
         public WorkUnit(ApplicationDbContext db)
         {
             _db = db;
@@ -36,6 +38,7 @@ namespace E_comerce_Inventory.DataAccess.Repository
             Inventory = new InventoryRepository(_db);
             StorePorduct = new StorePorductRepository(_db);
             DetailInventory = new DetailInventoryRepository(_db);
+            Company = new CompanyRepository(_db);
         }
 
 

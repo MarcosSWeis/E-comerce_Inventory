@@ -25,6 +25,8 @@ namespace E_comerce_Inventory.DataAccess.Repository.Interface
 
         IDetailInventoryRepository DetailInventory { get; }
 
+        ICompanyRepository Company { get; }
+
         public void SaveChangesInDb();
 
     }

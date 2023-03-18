@@ -1,0 +1,160 @@
+﻿@model E_comerce_Inventory.Models.ViewModels.CompanyViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var title = "Crear Producto";
+}
+<form method="post" enctype="multipart/form-data">
+    <div class="row p-3 border-0">
+        @*con esta etiqueta indico el lugar donde se mostaran todas errores de las validaciones de mi modelo*@
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    </div>
+
+
+    @if (Model.Company.Id != 0)
+    {
+        //actualizar
+        title = "Actualizar Producto";
+
+        <input type="hidden" asp-for="Company.Id" />
+
+    }
+
+    <div class="col-12 border-bottom">
+        <h2 class="text-primary">@title</h2>
+    </div>
+
+    <div class="col-8 pt-4">
+
+        <div class="form-group row ">
+            <div class="col-4">
+                <label asp-for="Company.Name">Nombre</label>
+            </div>
+            <div class="col-8">
+                <input asp-for="Company.Name" placeholder="Nombre de la compania" class="form-control" />
+                <span asp-validation-for="Company.Name" class="text-danger"></span>
+            </div>
+        </div>
+
+
+        <div class="form-group row ">
+            <div class="col-4">
+                <label asp-for="Company.Description">Descripción</label>
+            </div>
+            <div class="col-8">
+                <textarea asp-for="Company.Description" placeholder="Descripcion" class="form-control"></textarea>
+                <span asp-validation-for="Company.Description" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group row ">
+            <div class="col-4">
+                <label asp-for="Company.Country">Pais</label>
+            </div>
+            <div class="col-8">
+                <input asp-for="Company.Country" placeholder="Pais" class="form-control" />
+                <span asp-validation-for="Company.Country" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group row ">
+            <div class="col-4">
+                <label asp-for="Company.City">Ciudad</label>
+            </div>
+            <div class="col-8">
+                <input asp-for="Company.City" placeholder="Ciudad" class="form-control" />
+                <span asp-validation-for="Company.City" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group row ">
+            <div class="col-4">
+                <label asp-for="Company.Address">Dirección</label>
+            </div>
+            <div class="col-8">
+                <input asp-for="Company.Address" placeholder="Dirección" class="form-control" />
+                <span asp-validation-for="Company.Address" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group row ">
+            <div class="col-4">
+                <label asp-for="Company.Phone">Telefono</label>
+            </div>
+            <div class="col-8">
+                <input asp-for="Company.Phone" placeholder="Telefono" class="form-control" />
+                <span asp-validation-for="Company.Phone" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group row ">
+            <div class="col-4">
+                <label>Tienda de ventas</label>
+            </div>
+            <div class="col-8">
+                @Html.DropDownListFor(vm=> vm.Company.StoreSaleId, Model.StoreList, "Seleccione",new {@class="form-control"})
+                <span asp-validation-for="Company.StoreSaleId" class="text-danger"></span>
+            </div>
+        </div>
+
+       
+
+
+        <div class="form-group row ">
+            <div class="col-4">
+                <label>Logo</label>
+            </div>
+            <div class="col-8">
+                <input type="file" name="files" id="selectImage" multiple class="form-control" />
+            </div>
+        </div>
+
+
+        <div class="from-group row">
+            <div class="col-8 offset-4">
+                @if (Model.Company.Id != 0)
+                {
+                    @* a traves  de la etiqueta model en el partialview le indico lo que le voy a envia en este caso un Id que ese modelo de vista recibe del otro lado*@
+                    <partial name="_ButtonsUpdateAndReturnPartial" model="Model.Company.Id" />
+                } else
+                {
+                    <div class="row">
+                        <div class="col">
+                            <button type="submit" onclick="return inputValidation()" class="btn btn-primary form-control">Crear</button>
+                        </div>
+                        <div class="col">
+                            <a asp-action="Index" class="btn btn-success form-control">Regresar</a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    @if (Model.Company.Id != 0)
+    {
+        <div class="col-3 mt-4">
+            <img src="@Model.Company.LogoUrl" style="width:100% ; border-radius:5px ; border: 1px solid #375a7f " />
+        </div>
+    }
+</form>
+@section Scripts{
+
+    <partial name="_ValidationScriptsPartial"></partial>
+    <script>
+        function inputValidation() {
+            if (document.getElementById("selectImage").value == "") {
+                //indica que no selecciono ninguna imagen
+                Swal.fire({
+                    title: "Error"
+                            text: "No selecciono ninguna imagen"
+                            icon: "error",
+
+                });
+                return false;
+            }
+            return true;
+
+        }
+    </script>
+
+}

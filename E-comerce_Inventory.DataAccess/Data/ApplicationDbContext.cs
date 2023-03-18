@@ -22,6 +22,7 @@ namespace E_comerce_Inventory.DataAccess.Data
         public DbSet<StoreProduct> StoreProducts { get; set; }
         public DbSet<Inventory> Inventories { get; set; }
         public DbSet<DetailInventory> DetailInventories { get; set; }
+        public DbSet<Company> Companies { get; set; }
 
 
 
