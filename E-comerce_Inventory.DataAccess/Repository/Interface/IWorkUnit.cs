@@ -27,6 +27,10 @@ namespace E_comerce_Inventory.DataAccess.Repository.Interface
 
         ICompanyRepository Company { get; }
 
+        IOrderDetailRepository OrderDetail { get; }
+        IOrderRepository Order { get; }
+        IShoppingCartRepository ShoppingCart { get; }
+
         public void SaveChangesInDb();
 
     }
