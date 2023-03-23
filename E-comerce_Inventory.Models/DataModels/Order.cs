@@ -13,7 +13,7 @@ namespace E_comerce_Inventory.Models.DataModels
         [Key]
         public int Id { get; set; }
 
-        [Required]
+
         public string UserAplicationId { get; set; }
 
         [ForeignKey("UserAplicationId")]
@@ -27,7 +27,7 @@ namespace E_comerce_Inventory.Models.DataModels
         public string CodeShipping { get; set; }
         public string Carrier { get; set; }
 
-        [Required]
+
         [Column(TypeName = "money")]
         public decimal OrderTotal { get; set; }
 
@@ -42,22 +42,30 @@ namespace E_comerce_Inventory.Models.DataModels
         //o darle la opccion para fururas comrpas
         public string TransactionId { get; set; }
 
-        [Required]
-        public string Phone { get; set; }
-
-        public string Name { get; set; }
-
-        public string LastName { get; set; }
-
+        [Required(ErrorMessage = "El campo es requerido"), StringLength(15,ErrorMessage = "Longitud maxima de 15 caracteres")]
         public string Dni { get; set; }
 
-        public string Country { get; set; }
-
+        [Required(ErrorMessage = "El campo es requerido"), StringLength(50,ErrorMessage = "Longitud maxima de 50 caracteres")]
         public string Address { get; set; }
 
+        [Required(ErrorMessage = "El campo es requerido"), StringLength(100,ErrorMessage = "Longitud maxima de 100 caracteres")]
         public string City { get; set; }
 
+        [Required(ErrorMessage = "El campo es requerido"), StringLength(10,ErrorMessage = "Longitud maxima de 10 caracteres")]
         public string PostalCode { get; set; }
+
+        [Required(ErrorMessage = "El campo es requerido"), StringLength(15,ErrorMessage = "Longitud maxima de 15 caracteres")]
+        public string Phone { get; set; }
+        [Required]
+        public string Name { get; set; }
+        [Required]
+        public string LastName { get; set; }
+        [Required]
+        public string Country { get; set; }
+
+
+
+
 
 
 

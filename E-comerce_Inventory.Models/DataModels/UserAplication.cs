@@ -26,9 +26,8 @@ namespace E_comerce_Inventory.Models.DataModels
 
         public string PostalCode { get; set; }
 
-
-
         [NotMapped] //indico que no se debe agregar a mi base de datos
         public string Role { get; set; }
+
     }
 }

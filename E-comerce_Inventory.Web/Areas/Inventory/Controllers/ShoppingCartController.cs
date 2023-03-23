@@ -2,10 +2,16 @@
 using E_comerce_Inventory.Models.DataModels;
 using E_comerce_Inventory.Models.ViewModels;
 using E_comerce_Inventory.Utilities;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 
@@ -90,6 +96,87 @@ namespace E_comerce_Inventory.Web.Areas.Inventory.Controllers
         }
 
 
+        public IActionResult ProceedWithThePayment()
+        {
+
+            var userAplicationId = GetClaim().Value;
+
+
+            ShoppingCartVM = new ShoppingCartViewModel()
+            {
+                Order = new Order(),//inicializo la orden
+                ShoppingCartList = _workUnit.ShoppingCart.GetAll(sc => sc.UserAplicationId == userAplicationId,addProperties: $"{nameof(Product)}") //todos los productos con sus cantidades
+            };
+            //sigo inicializando la orden
+            ShoppingCartVM.Order.OrderTotal = 0;
+            ShoppingCartVM.Order.UserAplication = _workUnit.UserAplication.GetFirst(ua => ua.Id == userAplicationId);
+
+            foreach (var list in ShoppingCartVM.ShoppingCartList)
+            {
+                //price es una propieda no mapeada en la base de datos
+                //De cada carrito voy accediendo a su correspondiente producto asignado y le guerdo el precio en price                
+                ShoppingCartVM.Order.OrderTotal += (list.Product.Price * list.Quantity);
+            }
+
+            ShoppingCartVM.Order.Name = ShoppingCartVM.Order.UserAplication.Name;
+            ShoppingCartVM.Order.LastName = ShoppingCartVM.Order.UserAplication.LastName;
+            ShoppingCartVM.Order.Country = ShoppingCartVM.Order.UserAplication.Country;
+
+            return View(ShoppingCartVM);
+        }
+
+
+        //public IActionResult CustomerDataForPayment()
+        //{
+        //    DataPaymentUserViewModel completeDataOrder = new();
+        //    return View(completeDataOrder);
+        //}
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public IActionResult CustomerDataForPayment(DataPaymentUserViewModel dataOrder)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return View(dataOrder);
+        //    }
+
+        //    Order completeDataOrder = new();
+
+        //    completeDataOrder.PostalCode = dataOrder.PostalCode;
+        //    completeDataOrder.City = dataOrder.City;
+        //    completeDataOrder.Address = dataOrder.Address;
+        //    completeDataOrder.Dni = dataOrder.Dni;
+
+
+        //    return RedirectToAction(nameof(ProceedWithThePayment),"ShoppingCart",completeDataOrder);
+        //}
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+
+        public IActionResult ProceedWithThePayment(ShoppingCartViewModel shoppingCartVM)
+        {
+            if (!ModelState.IsValid)
+            {
+                var userAplicationId = GetClaim().Value;
+                shoppingCartVM.Order.OrderTotal = 0;
+                shoppingCartVM.Order.UserAplication = _workUnit.UserAplication.GetFirst(ua => ua.Id == userAplicationId);
+                shoppingCartVM.ShoppingCartList = _workUnit.ShoppingCart.GetAll(sc => sc.UserAplicationId == userAplicationId,addProperties: $"{nameof(Product)}");
+
+                foreach (var list in shoppingCartVM.ShoppingCartList)
+                {
+                    shoppingCartVM.Order.OrderTotal += (list.Product.Price * list.Quantity);
+                }
+                shoppingCartVM.Order.Name = shoppingCartVM.Order.UserAplication.Name;
+                shoppingCartVM.Order.LastName = shoppingCartVM.Order.UserAplication.LastName;
+                shoppingCartVM.Order.Country = shoppingCartVM.Order.UserAplication.Country;
+                return View(shoppingCartVM);
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
         #region PRIVATE
         private void DelteProductOfCart(ShoppingCart shoppingcart)
         {

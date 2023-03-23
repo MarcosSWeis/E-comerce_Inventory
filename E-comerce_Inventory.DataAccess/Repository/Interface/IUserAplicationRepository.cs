@@ -9,6 +9,6 @@ namespace E_comerce_Inventory.DataAccess.Repository.Interface
 {
     public interface IUserAplicationRepository :IRepository<UserAplication>
     {
-
+        public void Update(UserAplication userAplication);
     }
 }

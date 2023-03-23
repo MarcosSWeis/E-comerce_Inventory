@@ -18,6 +18,9 @@ namespace E_comerce_Inventory.DataAccess.Repository
             _db = db;
         }
 
-
+        public void Update(UserAplication userAplication)
+        {
+            _db.Update(userAplication);
+        }
     }
 }
