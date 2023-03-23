@@ -13,8 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\E-comerce_Inventory.Models\E-comerce_Inventory.Models.csproj" />
-    <ProjectReference Include="..\E-comerce_Inventory.Utilities\E-comerce_Inventory.Utilities.csproj" />
+    <ProjectReference Include="..\E-comerce_Inventory.Models\E_comerce_Inventory.Models.csproj" />
+    <ProjectReference Include="..\E-comerce_Inventory.Utilities\E_comerce_Inventory.Utilities.csproj" />
   </ItemGroup>
 
 </Project>
