@@ -4,8 +4,8 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 #E-comerce_Inventory
-appsettings.json
-
+E-comerce_Inventory.Web/appsettings.json
+E-comerce_Inventory.Web/appsettings.Development.json
 
 # User-specific files
 *.rsuser
