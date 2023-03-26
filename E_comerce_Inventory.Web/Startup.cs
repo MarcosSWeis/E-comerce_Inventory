@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using Stripe;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,6 +50,7 @@ namespace E_comerce_Inventory.Web
             }
             )
             .AddDefaultTokenProviders().AddEntityFrameworkStores<ApplicationDbContext>();// services.AddDefaultIdentity NO ACEPTA ROLES
+            services.Configure<StripeSettings>(Configuration.GetSection("Stripe"));
             services.AddScoped<IWorkUnit,WorkUnit>();
             services.AddSingleton<IEmailSender,EmailSender>(sp => new EmailSender(sp.GetService<IConfiguration>()));
 
@@ -94,6 +96,8 @@ namespace E_comerce_Inventory.Web
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            StripeConfiguration.ApiKey = Configuration.GetSection("Stripe")["SecretKey"];
 
             app.UseEndpoints(endpoints =>
             {

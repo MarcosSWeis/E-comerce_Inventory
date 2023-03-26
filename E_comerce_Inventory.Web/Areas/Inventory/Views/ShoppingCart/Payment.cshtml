@@ -1,6 +1,9 @@
 ﻿@model E_comerce_Inventory.Models.ViewModels.ShoppingCartViewModel
 @using Microsoft.Extensions.Options;
 @inject IOptions<E_comerce_Inventory.Utilities.StripeSettings> Stripe
+@if(Model  != null)
+{
+    
 <form method="post">
     <br />
     <div class="backgroundWhiteBorder">
@@ -26,52 +29,42 @@
                                 </div>
                                 <div class="row my-1">
                                     <div class="col-3">
-                                        <label>Nombres</label>
+                                        <label>Nombre</label>
                                     </div>
-                                    <div class="col-9">
-                                        <input asp-for="Order.Name" type="text" class="form-control" />
-                                        <span asp-validation-for="@Model.Order.Name" class="text-danger"></span>
-
+                                    <div class="col-9">                                       
+                                        <span  class="">@Model.Order.Name</span>
                                     </div>
                                 </div>
                                 <div class="row my-1">
                                     <div class="col-3">
-                                        <label>Nombres</label>
+                                        <label>Apellido</label>
                                     </div>
-                                    <div class="col-9">
-                                        <input asp-for="Order.LastName" type="text" class="form-control" />
-                                        <span asp-validation-for="@Model.Order.LastName" class="text-danger"></span>
-
-
+                                    <div class="col-9">                                       
+                                        <span  class="">@Model.Order.LastName</span>
                                     </div>
-                                </div>                               
+                                </div>
                                 <div class="row my-1">
                                     <div class="col-3">
                                         <label>Direccion</label>
                                     </div>
-                                    <div class="col-9">
-                                        <input asp-for="Order.Address" type="text" class="form-control" />
-                                        <span asp-validation-for="@Model.Order.Address" class="text-danger"></span>
-
+                                    <div class="col-9">                                      
+                                        <span  class="">@Model.Order.Address</span>
                                     </div>
                                 </div>
                                 <div class="row my-1">
                                     <div class="col-3">
                                         <label>Pais</label>
                                     </div>
-                                    <div class="col-9">
-                                        <input asp-for="Order.Country" type="text" class="form-control" />
-                                        <span asp-validation-for="@Model.Order.Country" class="text-danger"></span>
-
+                                    <div class="col-9">                                      
+                                        <span  class="">@Model.Order.Country</span>
                                     </div>
                                 </div>
                                 <div class="row my-1">
                                     <div class="col-3">
                                         <label>Ciudad</label>
                                     </div>
-                                    <div class="col-9">
-                                        <input asp-for="Order.City" type="text" class="form-control" />
-                                        <span asp-validation-for="@Model.Order.City" class="text-danger"></span>
+                                    <div class="col-9">                                      
+                                        <span  class="">@Model.Order.City</span>
                                     </div>
                                 </div>
                                 <div class="row my-1">
@@ -79,28 +72,25 @@
                                         <label>Codigo postal</label>
                                     </div>
                                     <div class="col-9">
-                                        <input asp-for="Order.PostalCode" type="text" class="form-control" />
-                                        <span asp-validation-for="@Model.Order.PostalCode" class="text-danger"></span>
+                                  
+                                        <span  class="">@Model.Order.PostalCode</span>
                                     </div>
                                 </div>
-                            
+
                                 <div class="row my-1">
                                     <div class="col-3">
                                         <label>Telefono</label>
                                     </div>
-                                    <div class="col-9">
-                                        <input asp-for="Order.Phone" type="text" class="form-control" />
-                                        <span asp-validation-for="@Model.Order.Phone" class="text-danger"></span>
+                                    <div class="col-9">                                        
+                                        <span  class="">@Model.Order.Phone</span>
                                     </div>
                                 </div>
                                 <div class="row my-1">
                                     <div class="col-3">
                                         <label>DNI</label>
                                     </div>
-                                    <div class="col-9">
-                                        <input asp-for="Order.Dni" type="text" class="form-control" />
-                                        <span asp-validation-for="@Model.Order.Dni" class="text-danger"></span>
-
+                                    <div class="col-9">                                    
+                                        <span  class="">@Model.Order.Dni</span>
                                     </div>
                                 </div>
 
@@ -121,8 +111,8 @@
                                         </li>
                                     }
 
-                                    <li class="list-group-item d-flex justify-content-between bg-light">                                    
-                                        <strong class="text-info">@(Model.Order.OrderTotal.ToString("C"))</strong>
+                                    <li class="list-group-item d-flex justify-content-between bg-light">
+                                        <strong class="text-info">$@(Model.Order.OrderTotal)</strong>
                                     </li>
                                 </ul>
                             </div>
@@ -135,14 +125,42 @@
                             <p style="color:maroon; font-size:14px;">Fecha Estimada de Envío: @DateTime.Now.AddDays(7).ToShortDateString() - @DateTime.Now.AddDays(14).ToShortDateString()</p>
                         </div>
                         <div class="col-12 col-md-4">
-                        
-                            <button type="submit" value="Realizar Pedido" class="btn btn-success form-control">Continuar</button>
+
+                            @{
+                                //a stripe hay que mandarselo multiplicado por 100 documentacion
+                                var TotalOrderStripe = Model.Order.OrderTotal * 100;
+                              
+                            }
+
+
+                                <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                                    data-key="@Stripe.Value.PublishableKey"
+                                    data-amount="@TotalOrderStripe"
+                                    data-name="Ecomerce inventory"
+                                    data-label="Realizar pedido"
+                                    data-description="Compra informatica"
+                                    data-locale="auto"
+                                    data-allow-remember-me="false"
+                                    data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+                                    >
+                                </script>
+
+                                <script>
+
+                                document.getElementsByClassName("stripe-button-el")[0].style.display = "none"
+                                </script>
+                            <button type="submit" value="Realizar Pedido" class="btn btn-success form-control">Realizar Pedido</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</form>
+    </form>
+} else
+{
+    <h2 class=" text-center text-bg-light ">Ups!! Ocurrio un error, presione aqui para volver a intentarlo</h2>
 
+    <a asp-action="ProceedWithThePayment" asp-controller="ShoppingCart" class="btn btn-primary text-center">Volver a intentar </a>
+}
 

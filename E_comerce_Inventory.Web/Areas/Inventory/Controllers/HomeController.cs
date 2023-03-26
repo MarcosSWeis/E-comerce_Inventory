@@ -1,5 +1,6 @@
 ﻿using E_comerce_Inventory.DataAccess.Data;
 using E_comerce_Inventory.DataAccess.Repository.Interface;
+using E_comerce_Inventory.Models;
 using E_comerce_Inventory.Models.DataModels;
 using E_comerce_Inventory.Models.ViewModels;
 using E_comerce_Inventory.Utilities;
@@ -87,7 +88,10 @@ namespace E_comerce_Inventory.Web.Areas.Inventory.Controllers
         {
             ShoppingCartVM = new ShoppingCartViewModel();
             ShoppingCartVM.Company = _workUnit.Company.GetFirst(); //SOLO EXISTE UNA EN MI PROYECTO
-            //miro si en mi store esta ese producto
+                                                                   //miro si en mi store esta ese producto
+                                                                   //var inventory = _workUnit.Inventory.GetFirst()
+                                                                   //var inventoryDetail = _workUnit.DetailInventory.GetAll(di => di.ProducId == id,addProperties: "Inventory");
+
             ShoppingCartVM.StoreProduct = _workUnit.StorePorduct.GetFirst(sp => sp.Product.Id == id && sp.StoreId == ShoppingCartVM.Company.StoreSaleId,
                                                                          addProperties: $"{nameof(Product)},{nameof(Product)}.{nameof(Category)},{nameof(Product)}.{nameof(Brand)}");
 

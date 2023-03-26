@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -23,6 +24,7 @@ namespace E_comerce_Inventory.Web.Areas.Inventory.Controllers
         private readonly IWorkUnit _workUnit;
         private readonly IEmailSender _emailSender;
         private readonly UserManager<IdentityUser> _userManager;
+        [BindProperty]
         public ShoppingCartViewModel ShoppingCartVM { get; set; }
 
         public ShoppingCartController(IWorkUnit workUnit,IEmailSender emailSender,UserManager<IdentityUser> userManager)
@@ -126,57 +128,143 @@ namespace E_comerce_Inventory.Web.Areas.Inventory.Controllers
         }
 
 
-        //public IActionResult CustomerDataForPayment()
-        //{
-        //    DataPaymentUserViewModel completeDataOrder = new();
-        //    return View(completeDataOrder);
-        //}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public IActionResult CustomerDataForPayment(DataPaymentUserViewModel dataOrder)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return View(dataOrder);
-        //    }
+        public IActionResult ProceedWithThePayment(Order order)
+        {
+            ShoppingCartViewModel CartVM = LoadViewModelWhitData(order);
+            if (!ModelState.IsValid)
+            {
+                return View(order);
+            }
 
-        //    Order completeDataOrder = new();
+            TempData.Put("datashoppingcartpayment",CartVM); //Con la propiedad [BindProperty] me ahorraba hacer lo del tempData ,
+                                                            //porque cuando los valores de una accion pasean a otra por post se mantengan las propiedades   
 
-        //    completeDataOrder.PostalCode = dataOrder.PostalCode;
-        //    completeDataOrder.City = dataOrder.City;
-        //    completeDataOrder.Address = dataOrder.Address;
-        //    completeDataOrder.Dni = dataOrder.Dni;
+            return RedirectToAction(nameof(Payment));
+        }
 
 
-        //    return RedirectToAction(nameof(ProceedWithThePayment),"ShoppingCart",completeDataOrder);
-        //}
+        public IActionResult Payment()
+        {
 
+
+            ShoppingCartViewModel CartVM = TempData.Get<ShoppingCartViewModel>("datashoppingcartpayment");
+            TempData.Keep("datashoppingcartpayment");
+            //el model es valido aca porque se realizo al validacion en la vista anterior
+            return View(CartVM);
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public IActionResult ProceedWithThePayment(ShoppingCartViewModel shoppingCartVM)
+        public IActionResult Payment(string stripeToken)
         {
-            if (!ModelState.IsValid)
+            var userAplicationId = GetClaim().Value;
+            ShoppingCartVM = new ShoppingCartViewModel()
             {
-                var userAplicationId = GetClaim().Value;
-                shoppingCartVM.Order.OrderTotal = 0;
-                shoppingCartVM.Order.UserAplication = _workUnit.UserAplication.GetFirst(ua => ua.Id == userAplicationId);
-                shoppingCartVM.ShoppingCartList = _workUnit.ShoppingCart.GetAll(sc => sc.UserAplicationId == userAplicationId,addProperties: $"{nameof(Product)}");
+                Order = new Order(),
 
-                foreach (var list in shoppingCartVM.ShoppingCartList)
+            };
+            ShoppingCartVM.Order.UserAplication = _workUnit.UserAplication.GetFirst(ua => ua.Id == userAplicationId);
+            ShoppingCartVM.ShoppingCartList = _workUnit.ShoppingCart.GetAll(sc => sc.UserAplicationId == userAplicationId,addProperties: $"{nameof(Product)}");
+
+
+            ShoppingCartVM.Order.OrderState = StateOrder.Pending.ToString();
+            ShoppingCartVM.Order.PaymentStatus = StatePayment.Pending.ToString();
+            ShoppingCartVM.Order.UserAplicationId = userAplicationId;
+            ShoppingCartVM.Order.OrderDate = DateTime.Now;
+            ShoppingCartVM.Company = _workUnit.Company.GetFirst();
+
+            ShoppingCartViewModel CartVM = TempData.Get<ShoppingCartViewModel>("datashoppingcartpayment");
+
+            ShoppingCartVM.Order.Address = CartVM.Order.Address;
+            ShoppingCartVM.Order.City = CartVM.Order.City;
+            ShoppingCartVM.Order.Dni = CartVM.Order.Dni;
+            ShoppingCartVM.Order.Phone = CartVM.Order.Phone;
+            ShoppingCartVM.Order.PostalCode = CartVM.Order.PostalCode;
+            ShoppingCartVM.Order.LastName = CartVM.Order.LastName;
+            ShoppingCartVM.Order.Name = CartVM.Order.Name;
+            ShoppingCartVM.Order.Country = CartVM.Order.Country;
+
+
+            _workUnit.Order.Add(ShoppingCartVM.Order);
+            _workUnit.SaveChangesInDb();
+
+            foreach (var shoppingCart in ShoppingCartVM.ShoppingCartList)
+            {
+                OrderDetail orderDetail = new OrderDetail()
                 {
-                    shoppingCartVM.Order.OrderTotal += (list.Product.Price * list.Quantity);
-                }
-                shoppingCartVM.Order.Name = shoppingCartVM.Order.UserAplication.Name;
-                shoppingCartVM.Order.LastName = shoppingCartVM.Order.UserAplication.LastName;
-                shoppingCartVM.Order.Country = shoppingCartVM.Order.UserAplication.Country;
-                return View(shoppingCartVM);
+                    ProductId = shoppingCart.ProductId,
+                    OrderId = ShoppingCartVM.Order.Id,
+                    Price = shoppingCart.Product.Price,
+                    Quantity = shoppingCart.Quantity,
+                };
+                //actualizo el total de la orden por cada producto que recorro de mi carrito
+                ShoppingCartVM.Order.OrderTotal += (orderDetail.Price * orderDetail.Quantity);
+                //a cada orden formada la guardo en la base de datos
+                _workUnit.OrderDetail.Add(orderDetail);
             }
 
-            return RedirectToAction(nameof(Index));
+            //borrlo todos los productos de mi carrito ya que se realizo la orden
+            _workUnit.ShoppingCart.DeleteRange(ShoppingCartVM.ShoppingCartList);
+            // _workUnit.SaveChangesInDb();
+            //actualizo la session 
+            UpdateSesion(0);
+
+            if (stripeToken != null)
+
+            {
+                var options = new Stripe.ChargeCreateOptions
+                {
+                    Amount = Convert.ToInt32(ShoppingCartVM.Order.OrderTotal * 100),
+                    Currency = "usd",
+                    Description = "Numero de Orden: " + ShoppingCartVM.Order.Id,
+                    Source = stripeToken
+                };
+
+                var service = new Stripe.ChargeService();
+                Stripe.Charge charge = service.Create(options);
+
+                if (charge.BalanceTransactionId == null) //la tansaccion no se ralizo correctamenre
+                {
+                    ShoppingCartVM.Order.PaymentStatus = StatePayment.Refused.ToString();
+                } else
+                {
+                    ShoppingCartVM.Order.TransactionId = charge.Id;
+                }
+
+                if (charge.Status.ToLower() == "succeeded")
+                {
+                    ShoppingCartVM.Order.OrderState = StateOrder.Aproved.ToString();
+                    ShoppingCartVM.Order.PaymentStatus = StatePayment.Aproved.ToString();
+                    ShoppingCartVM.Order.PaymentDate = DateTime.Now;
+
+                    //descontar stock de productos
+                    foreach (var shoppingCart in ShoppingCartVM.ShoppingCartList)
+                    {
+
+                        var product = _workUnit.StorePorduct.GetFirst(sp => sp.ProdutId == shoppingCart.ProductId && sp.StoreId == ShoppingCartVM.Company.StoreSaleId);
+                        if (product != null)
+                        {
+                            product.Quantity -= shoppingCart.Quantity;
+                        }
+
+                    }
+
+                }
+
+            }
+            _workUnit.SaveChangesInDb();
+            return RedirectToAction("ConfirmOrder","ShoppingCart",new { id = ShoppingCartVM.Order.Id });
         }
+
+        public IActionResult ConfirmOrder(int id)
+        {
+            return View(id);
+        }
+
         #region PRIVATE
         private void DelteProductOfCart(ShoppingCart shoppingcart)
         {
@@ -193,6 +281,29 @@ namespace E_comerce_Inventory.Web.Areas.Inventory.Controllers
             var claimIdentity = (ClaimsIdentity) User.Identity;
             var claim = claimIdentity.FindFirst(ClaimTypes.NameIdentifier);
             return claim;
+        }
+
+        private ShoppingCartViewModel LoadViewModelWhitData(Order order)
+        {
+            ShoppingCartViewModel shoppingCartVM = new ShoppingCartViewModel()
+            {
+                Order = order
+
+            };
+            var userAplicationId = GetClaim().Value;
+            shoppingCartVM.Order.OrderTotal = 0;
+            shoppingCartVM.Order.UserAplication = _workUnit.UserAplication.GetFirst(ua => ua.Id == userAplicationId);
+            shoppingCartVM.ShoppingCartList = _workUnit.ShoppingCart.GetAll(sc => sc.UserAplicationId == userAplicationId,addProperties: $"{nameof(Product)}");
+
+            foreach (var list in shoppingCartVM.ShoppingCartList)
+            {
+                shoppingCartVM.Order.OrderTotal += (list.Product.Price * list.Quantity);
+            }
+            shoppingCartVM.Order.Name = shoppingCartVM.Order.UserAplication.Name;
+            shoppingCartVM.Order.LastName = shoppingCartVM.Order.UserAplication.LastName;
+            shoppingCartVM.Order.Country = shoppingCartVM.Order.UserAplication.Country;
+
+            return shoppingCartVM;
         }
         #endregion
     }
