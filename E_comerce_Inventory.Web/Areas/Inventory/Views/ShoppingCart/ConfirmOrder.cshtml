@@ -10,6 +10,12 @@
         Hemos recibido tu Orden y Nosotros te enviaremos un email pronto!
         <br />
         Your Order Number is : @Model
+        <a asp-area="Inventory" asp-controller="Home" asp-action="Index"  class="btn btn-success">Salir</a>
+        @*con target = _blanck escuando se nos habre en otra ventana*@
+        <a asp-action="ShowDetailOrderPdfInPage" asp-route-id="@Model" class="btn btn-success" target="_blank">Ver PFD</a>
+        <a asp-action="DownloadFilePdfOfTheOrder" asp-route-id="@Model" class="btn btn-success">Descargar PDF</a>
+
+
     </div>
 </div>
 

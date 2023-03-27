@@ -1,15 +1,18 @@
-﻿using E_comerce_Inventory.DataAccess.Repository.Interface;
+﻿using DinkToPdf;
+using DinkToPdf.Contracts;
+using E_comerce_Inventory.DataAccess.Repository.Interface;
 using E_comerce_Inventory.Models.DataModels;
 using E_comerce_Inventory.Models.ViewModels;
 using E_comerce_Inventory.Utilities;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -24,15 +27,16 @@ namespace E_comerce_Inventory.Web.Areas.Inventory.Controllers
         private readonly IWorkUnit _workUnit;
         private readonly IEmailSender _emailSender;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly IConverter _convert;
         [BindProperty]
         public ShoppingCartViewModel ShoppingCartVM { get; set; }
 
-        public ShoppingCartController(IWorkUnit workUnit,IEmailSender emailSender,UserManager<IdentityUser> userManager)
+        public ShoppingCartController(IWorkUnit workUnit,IEmailSender emailSender,UserManager<IdentityUser> userManager,IConverter converter)
         {
             _workUnit = workUnit;
             _emailSender = emailSender;
             _userManager = userManager;
-
+            _convert = converter;
 
         }
         public IActionResult Index()
@@ -265,6 +269,36 @@ namespace E_comerce_Inventory.Web.Areas.Inventory.Controllers
             return View(id);
         }
 
+        public IActionResult ViewToPfdPage(int id)
+        {
+            ShoppingCartVM = new ShoppingCartViewModel();
+            ShoppingCartVM.Company = _workUnit.Company.GetFirst();
+            var order = _workUnit.Order.GetFirst(o => o.Id == id,addProperties: $"{nameof(UserAplication)}");
+            ShoppingCartVM.Order = _workUnit.Order.GetFirst(o => o.Id == id,addProperties: $"{nameof(UserAplication)}");
+            ShoppingCartVM.OrderDetailList = _workUnit.OrderDetail.GetAll(od => od.OrderId == id,addProperties: $"{nameof(Product)}");
+
+            return View(ShoppingCartVM);
+
+        }
+
+        public IActionResult ShowDetailOrderPdfInPage(int id)
+        {
+            byte[] pdfFile = CreatePdfOfTheOrder(id,"Inventory/ShoppingCart/ViewToPfdPage");
+            return File(pdfFile,"application/pdf");
+        }
+
+        public IActionResult DownloadFilePdfOfTheOrder(int id)
+        {
+            byte[] pdfFile = CreatePdfOfTheOrder(id,"Inventory/ShoppingCart/ViewToPfdPage");
+            string namePdf = "Orden#" + id + "_" + DateTime.Now.ToString("ddMMyyyy");
+            return File(pdfFile,"application/pdf",namePdf);
+        }
+
+
+
+
+
+
         #region PRIVATE
         private void DelteProductOfCart(ShoppingCart shoppingcart)
         {
@@ -281,6 +315,40 @@ namespace E_comerce_Inventory.Web.Areas.Inventory.Controllers
             var claimIdentity = (ClaimsIdentity) User.Identity;
             var claim = claimIdentity.FindFirst(ClaimTypes.NameIdentifier);
             return claim;
+        }
+
+        private byte[] CreatePdfOfTheOrder(int orderId,string urlToGo)
+        {
+            var pdfConfigure = new HtmlToPdfDocument()
+            {
+                GlobalSettings = new GlobalSettings()
+                {
+                    PaperSize = PaperKind.A4,
+                    Orientation = Orientation.Portrait
+                },
+                Objects = {
+                    new ObjectSettings()
+                    {
+                      Page = ChangePathUrl(urlToGo,orderId)
+                    }
+                }
+            };
+            return _convert.Convert(pdfConfigure);
+        }
+        /// <summary>
+        /// Retorna un string de la url a la que decea ir
+        /// </summary>
+        /// <param name="urlToGo">Tiene una forma Controller/Method</param>
+        /// <returns></returns>
+        private string ChangePathUrl(string urlToGo,int orderId)
+        {
+            string current_url = HttpContext.Request.Path; ///Inventory/ShoppingCart/ShowDetailOrderPdfInPage/12
+            string url_page = HttpContext.Request.GetEncodedUrl(); //ejemplo localhst:/exetera
+            //completo la ruta
+            url_page = url_page.Replace(current_url,"");
+            url_page = $"{url_page}/{urlToGo}/{orderId}";
+
+            return url_page;
         }
 
         private ShoppingCartViewModel LoadViewModelWhitData(Order order)

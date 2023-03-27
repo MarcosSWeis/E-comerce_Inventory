@@ -1,8 +1,11 @@
+using DinkToPdf;
+using DinkToPdf.Contracts;
 using E_comerce_Inventory.DataAccess.Data;
 using E_comerce_Inventory.DataAccess.Repository;
 using E_comerce_Inventory.DataAccess.Repository.Interface;
 using E_comerce_Inventory.Models.DataModels;
 using E_comerce_Inventory.Utilities;
+using E_comerce_Inventory.Web.Extesion;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -17,8 +20,11 @@ using Microsoft.Extensions.Options;
 using Stripe;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+
+
 
 namespace E_comerce_Inventory.Web
 {
@@ -34,6 +40,14 @@ namespace E_comerce_Inventory.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Configurrion PDF
+            var context = new CustomAssemblyLoadContext();
+            //recibe la ruta donde se encuentra el archivo dll
+            context.LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(),"LibraryPDF/libwkhtmltox.dll"));
+            //ahora puedo accedera la clases de estalibreria
+            services.AddSingleton(typeof(IConverter),new SynchronizedConverter(new PdfTools()));
+
+
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(

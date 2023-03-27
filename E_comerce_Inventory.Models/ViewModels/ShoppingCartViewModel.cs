@@ -15,5 +15,7 @@ namespace E_comerce_Inventory.Models.ViewModels
         public IEnumerable<ShoppingCart> ShoppingCartList { get; set; }
         public Order Order { get; set; }
 
+        public IEnumerable<OrderDetail> OrderDetailList { get; set; }
+
     }
 }
